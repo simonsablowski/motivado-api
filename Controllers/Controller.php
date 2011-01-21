@@ -18,8 +18,7 @@ abstract class Controller extends Application {
 			
 			$this->print("<response>");
 			$this->print("\t<status>Failure</status>");
-			$this->print("\t<errortype>%s</errortype>", $Error->getType());
-			$this->print("\t<errorcode>%s</errorcode>", $Error->getCode());
+			$Error->dump();
 			$this->print("</response>");
 			
 			$this->getOutputBuffer()->flush();
