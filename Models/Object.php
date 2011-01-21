@@ -22,44 +22,6 @@ class Object extends Model {
 	protected $NextObjects = NULL;
 	protected $Video = NULL;
 	
-	/*protected function loadCoaching($UserId = NULL) {
-		try {
-			$ObjectSequence = ObjectSequenceFinder::findFirst(array(
-				'RightId' => $this->getId()
-			));
-			if ($ObjectSequence->getCoachingId() == 0) {
-				return;
-			}
-		} catch (Exception $Error) {
-			return;
-		}
-		
-		if (!is_null($UserId)) {
-			$UsersCoachings = UsersCoachingFinder::findAll(array(
-				'UserId' => $UserId
-			), array('modified DESC'));
-			
-			if (!$UsersCoachings) {
-				return;
-			}
-			
-			foreach ($UsersCoachings as $UsersCoaching) {
-				$Coaching = CoachingFinder::find($UsersCoaching->getObjectId());
-				if ($Coaching->getReferenceId() == $ObjectSequence->getCoachingId()) {
-					$this->setCoaching($Coaching);
-					break;
-				}
-			}
-		} else {
-			$this->setCoaching(CoachingFinder::find($ObjectSequence->getCoachingId()));
-		}
-	}
-	
-	public function getCoaching($UserId = NULL) {
-		if (is_null($this->Coaching)) $this->loadCoaching($UserId);
-		return $this->Coaching;
-	}*/
-	
 	protected function loadNextObjects($UserId = NULL, $condition = array()) {
 		$this->setNextObjects(ObjectSequenceFinder::findNextObjects($this, $condition));
 	}
@@ -77,8 +39,6 @@ class Object extends Model {
 		}/* else if (!is_null($UserId)) {
 			$this->loadNextObjectSuitableToCharacterTraits($UserId);
 		}*/
-		
-		/*if (!$NextObjects || (!is_null($this->NextObject) && $this->NextObject->getType() == 'End')) $this->loadCoachingsNextObject($UserId);*/
 	}
 	
 	/*protected function loadNextObjectSuitableToCharacterTraits($UserId) {
@@ -144,28 +104,9 @@ class Object extends Model {
 		}
 	}*/
 	
-	/*protected function loadCoachingsNextObject($UserId) {
-		if ($Coaching = $this->getCoaching($UserId)) {
-			$this->setNextObject($Coaching->getNextObject($UserId));
-		} else {
-			$this->setNextObject(NULL);
-		}
-	}
-	
 	public function getNextObject($UserId = NULL, $condition = array()) {
 		if (is_null($this->NextObject)) $this->loadNextObject($UserId, $condition);
 		return $this->NextObject;
-	}*/
-	
-	protected function loadVideo() {
-		try {
-			$ObjectsVideo = ObjectsVideoFinder::findFirst(array(
-				'ObjectId' => $this->getId()
-			));
-			$this->setVideo($ObjectsVideo->getVideo());
-		} catch (Exception $Error) {
-			$this->setVideo(NULL);
-		}
 	}
 	
 	public function getDumpsHiddenFields() {
@@ -201,7 +142,6 @@ class Object extends Model {
 			if (in_array($field, $this->getDumpsHiddenFields())) continue;
 			$this->dumpProperty($field, $value, $depth);
 		}
-		/*if ($this->hasVideo()) $dump .= $this->getVideo()->dump($depth + 1, 'objectsvideo');*/
 		$this->dumpFooter($depth);
 	}
 }

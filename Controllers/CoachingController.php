@@ -20,26 +20,11 @@ class CoachingController extends Controller {
 		$this->printLine("\t<description>%s</description>", $Coaching->getDescription());
 		
 		while (!is_null($CurrentObject)) {
-			/*if ($CurrentObject->getType() == 'Coaching') {
-				$Coaching = $CurrentObject;
-				//$CurrentObject = $this->handleCoaching($CurrentObject, $UserId);
-				$CurrentObject = $this->handleCoaching(CoachingFinder::findByTitle($CurrentObject->getTitle()), $UserId);//TODO: silly code, just for testing
-				
-				if (is_null($CurrentObject)) break;
-			}*/
-			
 			if (($CurrentObject->getType() == 'SignIn' || $CurrentObject->getType() == 'Payment') && isSignedIn()) {
 				$CurrentObject = $CurrentObject->getNextObject($UserId);
-				
-				/*if ($CurrentObject->getType() == 'Coaching') {
-					$Coaching = $CurrentObject;
-					$CurrentObject = $this->handleCoaching($CurrentObject, $UserId);
-					
-					if (is_null($CurrentObject)) break;
-				}*/
 			}
 			
-			$this->dumpObject($CurrentObject);
+			$CurrentObject->dump();
 			
 			if (($CurrentObject->getType() == 'SignIn' || $CurrentObject->getType() == 'Payment') && !isSignedIn()) {
 				break;
@@ -53,27 +38,12 @@ class CoachingController extends Controller {
 			$Ancestor = $CurrentObject;
 			$CurrentObject = $Ancestor->getNextObject($UserId);
 			
-			/*if (!is_null($CurrentObject) && $CurrentObject->getType() == 'Coaching') {
-				//break;
-			}*/
+			if (!is_null($CurrentObject) && $CurrentObject->getType() == 'Coaching') {
+				break;
+			}
 		}
 		
 		$this->printLine("</objectsequence>");
 		$this->getOutputBuffer()->flush();
-	}
-	
-	/*protected function handleCoaching($Coaching) {
-		$FirstObject = $Coaching->getFirstObject();
-		
-		if (!is_null($FirstObject) && $FirstObject->getType() == 'Coaching') return $this->handleCoaching($FirstObject, $this->getUser()->getId());
-		else return $FirstObject;
-	}*/
-	
-	protected function dumpObject($Object) {
-		/*if ($Object->getType() == 'Coaching') {
-			return;
-		}*/
-		
-		$Object->dump();
 	}
 }
