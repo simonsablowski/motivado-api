@@ -1,7 +1,6 @@
 <?php
 
 class Coaching extends Object {
-	protected $tableName = 'coaching';
 	protected $fields = array(
 		'id',
 		'OriginalId',
@@ -28,18 +27,18 @@ class Coaching extends Object {
 		$ObjectSequenceObjects = ObjectSequenceFinder::findAll(array(
 			'CoachingId' => $this->getReferenceId()
 		));
-		$this->Objects = array();
+		$Objects = array();
 		foreach ($ObjectSequenceObjects as $ObjectSequenceObject) {
-			$this->Objects[] = ObjectFinder::find($ObjectSequenceObject->getRightId());
+			$Objects[] = ObjectFinder::find($ObjectSequenceObject->getRightId());
 		}
+		$this->setObjects($Objects);
 	}
 		
 	protected function loadFirstObject() {
 		$ObjectSequence = ObjectSequenceFinder::findFirst(array(
 			'CoachingId' => $this->getId(),
-			'LeftId' => 0,
-			'LeftType' => ''
+			'LeftId' => 0
 		));
-		$this->FirstObject = ObjectFinder::find($ObjectSequence->getRightId());
+		$this->setFirstObject(ObjectFinder::find($ObjectSequence->getRightId()));
 	}
 }

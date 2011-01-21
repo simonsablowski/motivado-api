@@ -1,103 +1,78 @@
 <?php
 
-class Coaching extends Controller {
+class CoachingController extends Controller {
 	protected function getStartObject($CoachingId) {
 		return CoachingFinder::find($CoachingId)->getFirstObject();
 	}
 	
-	public function dumpCoachingPath($key, $UserId) {
+	public function dumpCoachingPath($key) {
 		$Coaching = CoachingFinder::findByKey($key);
+		$UserId = $this->getUser()->getId();
 		
-		$this->print("<objectsequence>");
+		$this->printLine("<objectsequence>");
 		$CurrentObject = $this->getStartObject($Coaching->getId());
 		
-		if ($CurrentObject->getObjectName() == 'Coaching') {
+		if ($CurrentObject->getType() == 'Coaching') {
 			$Coaching = $CurrentObject;
-		} else if (($Coaching = $CurrentObject->getCoaching($UserId))) {
-			$Coaching = $Coaching;
-		} else {
-			$Coaching = NULL;
 		}
 		
-		if (!is_null($Coaching)) {
-			$title = $Coaching->getTitle();
-			$description = $Coaching->getDescription();
-		} else {
-			$title = $this->lang->line('gapFillerTitle');
-			$description = $this->lang->line('gapFillerDescription');
-		}
-		
-		$this->print("\t<title>%s</title>", $title);
-		$this->print("\t<description>%s</description>", $description);
+		$this->printLine("\t<title>%s</title>", $Coaching->getTitle());
+		$this->printLine("\t<description>%s</description>", $Coaching->getDescription());
 		
 		while (!is_null($CurrentObject)) {
-			$coachingLock = NULL;
-			if ($coachingLock = $this->session->userdata('coachingLock') && isset($coachingLock[$Coaching->getId()])) {
-				$this->dumpObject(ObjectFinder::find($coachingLock[$Coaching->getId()]['ObjectId']));
-				break;
-			} else if ($CurrentObject->getObjectName() == 'Coaching') {
+			/*if ($CurrentObject->getType() == 'Coaching') {
 				$Coaching = $CurrentObject;
-				$CurrentObject = $this->handleCoaching($CurrentObject, $UserId);
+				//$CurrentObject = $this->handleCoaching($CurrentObject, $UserId);
+				$CurrentObject = $this->handleCoaching(CoachingFinder::findByTitle($CurrentObject->getTitle()), $UserId);//TODO: silly code, just for testing
 				
 				if (is_null($CurrentObject)) break;
-			}
+			}*/
 			
-			if (($CurrentObject->getObjectName() == 'SignIn' || $CurrentObject->getObjectName() == 'Payment') && isSignedIn()) {
+			if (($CurrentObject->getType() == 'SignIn' || $CurrentObject->getType() == 'Payment') && isSignedIn()) {
 				$CurrentObject = $CurrentObject->getNextObject($UserId);
 				
-				if ($CurrentObject->getObjectName() == 'Coaching') {
+				/*if ($CurrentObject->getType() == 'Coaching') {
 					$Coaching = $CurrentObject;
 					$CurrentObject = $this->handleCoaching($CurrentObject, $UserId);
 					
 					if (is_null($CurrentObject)) break;
-				}
+				}*/
 			}
 			
 			$this->dumpObject($CurrentObject);
 			
-			if ((($CurrentObject->getObjectName() == 'SignIn' || $CurrentObject->getObjectName() == 'Payment') && !isSignedIn())) {
-				$coachingLock = $this->session->userdata('coachingLock');
-				$newCoachingLock = array(
-					$Coaching->getId() => array(
-						'ObjectId' => $CurrentObject->getId(),
-						'ObjectType' => $CurrentObject->getObjectName()
-					)
-				);
-				$this->session->set_userdata('coachingLock', is_array($coachingLock) ? array_merge($coachingLock, $newCoachingLock) : $newCoachingLock);
-				
+			if (($CurrentObject->getType() == 'SignIn' || $CurrentObject->getType() == 'Payment') && !isSignedIn()) {
 				break;
-			} else if ($CurrentObject->getObjectName() == 'Questionnaire' && $CurrentObject->isActivated($UserId)) {
+			} else if ($CurrentObject->getType() == 'Interrupt') {
+				if ($interruptText = $CurrentObject->getText()) $this->getSession()->setData('interruptText', $interruptText);
 				break;
-			}
-			
-			if ($CurrentObject->getObjectName() == 'Interrupt') {
-				if ($interruptText = $CurrentObject->getText()) $this->session->set_userdata('interruptText', $interruptText);
+			} else if ($CurrentObject->getType() == 'Questionnaire' && $CurrentObject->isActivated($UserId)) {
 				break;
 			}
 			
 			$Ancestor = $CurrentObject;
 			$CurrentObject = $Ancestor->getNextObject($UserId);
 			
-			if (!is_null($CurrentObject) && $CurrentObject->getObjectName() == 'Coaching') {
-				break;
-			}
+			/*if (!is_null($CurrentObject) && $CurrentObject->getType() == 'Coaching') {
+				//break;
+			}*/
 		}
 		
-		$this->print("</objectsequence>");
+		$this->printLine("</objectsequence>");
 		$this->getOutputBuffer()->flush();
 	}
 	
-	protected function handleCoaching($Coaching, $UserId) {
+	/*protected function handleCoaching($Coaching) {
 		$FirstObject = $Coaching->getFirstObject();
 		
-		if (!is_null($FirstObject) && $FirstObject->getObjectName() == 'Coaching') return $this->handleCoaching($FirstObject, $UserId);
+		if (!is_null($FirstObject) && $FirstObject->getType() == 'Coaching') return $this->handleCoaching($FirstObject, $this->getUser()->getId());
 		else return $FirstObject;
-	}
+	}*/
 	
 	protected function dumpObject($Object) {
-		if ($Object->getObjectName() == 'Coaching') {
+		/*if ($Object->getType() == 'Coaching') {
 			return;
-		}
+		}*/
 		
 		$Object->dump();
 	}

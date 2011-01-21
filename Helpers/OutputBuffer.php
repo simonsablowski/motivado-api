@@ -1,15 +1,19 @@
 <?php
 
 class OutputBuffer extends Application {
+	public function __construct() {
+		
+	}
+	
 	public function start() {
 		ob_start();
 	}
 	
 	public function clean() {
-		ob_end_clean();
+		ob_clean();
 	}
 	
 	public function flush() {
-		ob_end_flush();
+		ob_flush();
 	}
 }

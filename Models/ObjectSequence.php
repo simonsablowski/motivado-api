@@ -1,7 +1,6 @@
 <?php
 
 class ObjectSequence extends Model {
-	protected $tableName = 'objectsequence';
 	protected $primaryKey = array(
 		'CoachingId',
 		'LeftId',
