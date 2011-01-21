@@ -1,8 +1,6 @@
 <?php
 
 class ObjectSequenceFinder extends Finder {
-	protected static $tableName = 'objectsequence';
-	
 	public static function findNextObjects($Object, $data = array()) {
 		$ObjectSequences = self::findAll(array_merge(array(
 			'CoachingId' => $Object->getCoachingId(),
@@ -11,7 +9,7 @@ class ObjectSequenceFinder extends Finder {
 		
 		$NextObjects = array();
 		foreach ($ObjectSequences as $ObjectSequence) {
-			$NextObject = ObjectFinder::find($RightId = $ObjectSequence->getRightId());
+			$NextObject = ObjectFinder::find($ObjectSequence->getRightId());
 			$NextObjects[] = $NextObject;
 		}
 		

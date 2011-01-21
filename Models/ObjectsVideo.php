@@ -1,7 +1,6 @@
 <?php
 
 class ObjectsVideo extends Model {
-	protected $tableName = 'objectsvideo';
 	protected $primaryKey = array(
 		'ObjectId',
 		'VideoId'

@@ -1,6 +1,8 @@
 <?php
 
 abstract class Controller extends Application {
+	protected $Session = NULL;
+	protected $OutputBuffer = NULL;
 	protected $User = NULL;
 	
 	public function __construct() {
@@ -8,18 +10,21 @@ abstract class Controller extends Application {
 		printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 	}
 	
-	protected function performAction($actionName) {
+	protected function performAction($actionName, $parameters) {
 		try {
-			$this->$actionName();
+			$this->setOutputBuffer(new OutputBuffer);
+			$this->getOutputBuffer()->start();
+			
+			call_user_func_array(array($this, $actionName), $parameters);
 			
 			$this->getOutputBuffer()->flush();
 		} catch (Exception $Error) {
-			$this->getOutputBuffer()->clear();
+			$this->getOutputBuffer()->clean();
 			
-			$this->print("<response>");
-			$this->print("\t<status>Failure</status>");
+			$this->printLine("<response>");
+			$this->printLine("\t<status>Failure</status>");
 			$Error->dump();
-			$this->print("</response>");
+			$this->printLine("</response>");
 			
 			$this->getOutputBuffer()->flush();
 		}

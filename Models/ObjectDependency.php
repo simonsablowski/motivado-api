@@ -1,7 +1,6 @@
 <?php
 
 class ObjectDependency extends Model {
-	protected $tableName = 'objectdependency';
 	protected $primaryKey = array(
 		'CoachingId',
 		'LeftId',

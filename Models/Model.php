@@ -1,7 +1,6 @@
 <?php
 
 abstract class Model extends Application {
-	protected $tableName = NULL;
 	protected $primaryKey = 'id';
 	protected $fields = array();
 	protected $requiredFields = array();
@@ -9,7 +8,7 @@ abstract class Model extends Application {
 	
 	public function __call($method, $parameters) {
 		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
-		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new Exception('Invalid method format', $method);
+		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new Error('Invalid method format', $method);
 		
 		$operation = $methodParts[0][0];
 		array_shift($methodParts[0]);
@@ -26,6 +25,10 @@ abstract class Model extends Application {
 		} else if (property_exists($this, $propertyCapitalized)) {
 			$propertyExists = TRUE;
 			$property = $propertyCapitalized;
+			
+			if (method_exists($this, 'load' . $property) || property_exists($this, $property . 'Id')) {
+				$hasLoader = TRUE;
+			}
 		}
 		
 		if ($this->isField($property)) {
@@ -33,15 +36,11 @@ abstract class Model extends Application {
 		} else if ($this->isField($propertyCapitalized)) {
 			$isField = TRUE;
 			$property = $propertyCapitalized;
-		} else if ($this->isField($propertyCapitalized . 'Id')) {
-			$isField = TRUE;
-			$property = $propertyCapitalized . 'Id';
-			$hasLoader = TRUE;
 		}
 		
 		switch ($operation) {
 			case 'get':
-				if ($isField && $hasLoader) {
+				if (($isField || $propertyExists) && $hasLoader) {
 					$loaderName = 'load' . $property;
 					if (is_null($this->$property)) $this->$loaderName();
 					return $this->$property;
@@ -57,7 +56,7 @@ abstract class Model extends Application {
 					return $this->$property == 'yes';
 				}
 			case 'has':
-				if ($isField & $hasLoader) {
+				if (($isField || $propertyExists) & $hasLoader) {
 					$loaderName = 'load' . $property;
 					if (is_null($this->$property)) $this->$loaderName();
 					return is_object($this->$property);
@@ -87,8 +86,6 @@ abstract class Model extends Application {
 	}
 	
 	public function __construct() {
-		parent::__construct();
-		
 		$requiredFields = $this->getRequiredFields();
 		$arguments = func_get_args();
 		
@@ -115,8 +112,12 @@ abstract class Model extends Application {
 		}
 	}
 	
-	public function getClassName() {
+	public function getModelName() {
 		return get_class($this);
+	}
+	
+	public function getTableName() {
+		return strtolower($this->getModelName());
 	}
 	
 	protected function getPrimaryKeyValue() {
@@ -154,33 +155,21 @@ abstract class Model extends Application {
 	
 	protected function prepareSaving() {
 		if ($this->isField('status')) $this->setStatus('active');
-		if ($this->isField('created')) {
-			$this->db->set('created', 'NOW()', FALSE);
-			unset($this->data['created']);
-		}
+		if ($this->isField('created')) $this->setData('created', 'NOW()');
 	}
 	
 	public function save() {
 		$this->prepareSaving();
-		return $this->db->insert($this->getTableName(), $this->getData());
+		return Database::insert($this->getTableName(), $this->getData());
 	}
 	
 	protected function prepareUpdating() {
-		if ($this->isField('modified')) {
-			$this->db->set('modified', 'NOW()', FALSE);
-			unset($this->data['modified']);
-		}
-		if ($this->isField('modifications')) {
-			$this->db->set('modifications', 'modifications + 1', FALSE);
-			unset($this->data['modifications']);
-		}
+		if ($this->isField('modified')) $this->setData('modified', 'NOW()');
 	}
 	
 	public function update() {
 		$this->prepareUpdating();
-		$this->db->where($this->getPrimaryKeyValue());
-		$this->db->limit(1);
-		return $this->db->update($this->getTableName(), $this->getData());
+		return Database::update($this->getTableName(), $this->getData(), $this->getPrimaryKeyValue(), 1);
 	}
 	
 	protected function prepareDeleting() {
@@ -190,14 +179,11 @@ abstract class Model extends Application {
 	
 	public function delete() {
 		$this->prepareDeleting();
-		$this->db->where($this->getPrimaryKeyValue());
-		$this->db->limit(1);
-		return $this->db->update($this->getTableName(), $this->getData());
+		return Database::update($this->getTableName(), $this->getData(), $this->getPrimaryKeyValue(), 1);
 	}
 	
-	//TODO: check this!
 	public function saveSafely($condition = array('status' => NULL)) {
-		$modelName = $this->getClassName();
+		$modelName = $this->getModelName();
 		$finderName = $modelName . 'Finder';
 		try {
 			$Object = $finderName::find($this->getPrimaryKeyValue(), $condition);

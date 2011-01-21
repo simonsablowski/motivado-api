@@ -1,11 +1,9 @@
 <?php
 
 class Application {
-	protected $Session = NULL;
-	protected $Database = NULL;
-	protected $Request = NULL;
-	protected $Controller = NULL;
-	protected $OutputBuffer = NULL;
+	private $Session = NULL;
+	private $Request = NULL;
+	private $Controller = NULL;
 	protected $configuration = array();
 	
 	public function __call($method, $parameters) {
@@ -31,63 +29,60 @@ class Application {
 		
 		switch ($operation) {
 			case 'get':
-				return self::$property;
+				return $this->$property;
 			case 'is':
-				return self::$property == 'yes';
+				return $this->$property == 'yes';
 			case 'set':
-				self::$property = $parameters[0];
+				$this->$property = $parameters[0];
 				return;
 		}
 	}
 	
-	public function __construct($configuration, $requestQuery) {
+	public function __construct($configuration, $RequestQuery) {
 		$this->setConfiguration($configuration);
-		$this->analyzeRequest($requestQuery);
+		$this->analyzeRequest($RequestQuery);
 	}
 	
 	final public function run() {
 		$this->setup();
-		$this->getController()->performAction($this->getRequest()->getAction());
+		$this->getController()->performAction($this->getRequest()->getAction(), $this->getRequest()->getParameters());
 	}
 	
 	final private function setup() {
-		error_reporting(E_ALL);
-		
-		$this->startSession();
-		$this->connectToDatabase();
+		$this->initializeSession();
+		$this->initializeDatabase();
 		$this->initializeController();
-		$this->initializeOutputBuffer();
 	}
 	
-	final private function analyzeRequest($requestQuery) {
-		$this->setRequest(new Request($requestQuery));
+	final private function analyzeRequest($RequestQuery) {
+		$this->setRequest(new Request($RequestQuery));
+		$this->getRequest()->setConfiguration($this->getConfiguration('Request'));
 		$this->getRequest()->analyze();
 	}
 	
-	final private function startSession() {
+	final private function initializeSession() {
 		$this->setSession(new Session);
 		$this->getSession()->start();
 	}
 	
-	final private function connectToDatabase() {
-		$this->setDatabase(new Database($this->getConfiguration('Database')));
-		$this->getDatabase()->connect();
+	final private function initializeDatabase() {
+		Database::initialize($this->getConfiguration('Database'));
+		Database::connect();
 	}
 	
 	final private function initializeController() {
-		$controllerName = $this->getRequest()->getController() . 'Controller';
-		$this->setController(new $controllerName);
+		$ControllerName = $this->getRequest()->getController() . 'Controller';
+		$this->setController(new $ControllerName);
+		$this->getController()->setConfiguration($this->getConfiguration());
+		$this->getController()->setSession($this->getSession());
+		$this->getController()->setUser(new User(array('firstName' => 'Simon')));//TODO: dummy code
 	}
 	
-	final private function initializeOutputBuffer() {
-		$this->setOutputBuffer(new OutputBuffer);
-	}
-	
-	protected getConfiguration($field = NULL) {
+	protected function getConfiguration($field = NULL) {
 		return !is_null($field) ? (isset($this->configuration[$field]) ? $this->configuration[$field] : NULL) : $this->configuration;
 	}
 	
-	protected function print($line, $arguments = array()) {
+	protected function printLine($line, $arguments = array()) {
 		vprintf("\n" . $line, is_array($arguments) ? $arguments : array($arguments));
 	}
 }
