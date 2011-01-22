@@ -1,16 +1,12 @@
 <?php
 
 class CoachingController extends Controller {
-	protected function getStartObject($CoachingId) {
-		return CoachingFinder::find($CoachingId)->getFirstObject();
-	}
-	
 	public function query($key) {
 		$Coaching = CoachingFinder::findByKey($key);
 		$UserId = $this->getUser()->getId();
 		
 		$this->printLine("<objectsequence>");
-		$CurrentObject = $this->getStartObject($Coaching->getId());
+		$CurrentObject = $Coaching->getFirstObject();
 		
 		if ($CurrentObject->getType() == 'Coaching') {
 			$Coaching = $CurrentObject;
