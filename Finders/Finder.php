@@ -1,7 +1,6 @@
 <?php
 
 abstract class Finder extends Application {
-	protected static $tableName = NULL;
 	protected static $primaryKey = 'id';
 	protected static $defaultCondition = array('status' => 'active');
 	protected static $defaultSorting = array('created');
