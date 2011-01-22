@@ -114,7 +114,7 @@ class Object extends Model {
 	}
 	
 	public function dumpHeader($depth) {
-		$this->printLine("%s<object id=\"%s\" type=\"%s\">", array(str_repeat("\t", $depth), $this->getId(), $this->getType()));
+		$this->printLine("%s<%s id=\"%d\"%s>", array(str_repeat("\t", $depth), strtolower($this->getClassName()), $this->getId(), $this->isField('type') ? sprintf(" type=\"%s\"", $this->getType()) : ''));
 	}
 	
 	public function cleanDumpsProperty($value) {
@@ -132,7 +132,7 @@ class Object extends Model {
 	}
 	
 	public function dumpFooter($depth) {
-		$this->printLine("%s</object>", str_repeat("\t", $depth));
+		$this->printLine("%s</%s>", array(str_repeat("\t", $depth), strtolower($this->getClassName())));
 	}
 	
 	//TODO: also dump nested Video as well as unserialized data field (needs other name)

@@ -1,8 +1,8 @@
 <?php
 
 class Session extends Application {
-	public function __construct() {
-		
+	public function __construct($sessionId = NULL) {
+		if (!is_null($sessionId)) session_id($sessionId);
 	}
 	
 	public function start() {
@@ -11,6 +11,12 @@ class Session extends Application {
 	
 	public function getId() {
 		return session_id();
+	}
+	
+	public function getData($field = NULL) {
+		if (is_null($field)) return $_SESSION;
+		else if (isset($_SESSION[$field])) return $_SESSION[$field];
+		else return NULL;
 	}
 	
 	public function setData() {

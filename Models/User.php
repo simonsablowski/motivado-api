@@ -1,6 +1,6 @@
 <?php
 
-class User extends Model {
+class User extends Object {
 	protected $fields = array(
 		'id',
 		'firstName',
@@ -10,6 +10,7 @@ class User extends Model {
 		'modified'
 	);
 	protected $requiredFields = array(
-		'firstName'
+		'firstName',
+		'lastName'
 	);
 }
