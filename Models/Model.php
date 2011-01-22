@@ -83,7 +83,7 @@ abstract class Model extends Application {
 		
 		foreach ($requiredFields as $field) {
 			if (!array_key_exists($field, $data)) {
-				throw new FatalError('Required fields missing', array('array_keys($data)' => array_keys($data), '$requiredFields' => $requiredFields));
+				throw new FatalError('Required fields missing', array('Given fields' => array_keys($data), 'Required fields' => $requiredFields));
 			}
 		}
 		
