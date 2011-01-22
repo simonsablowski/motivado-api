@@ -1,0 +1,8 @@
+<response>
+	<status>Failure</status>
+	<error>
+		<type><? echo $Error->getType(); ?></type>
+		<code><? echo $Error->getCode(); ?></code>
+		<message><? echo $Error->getMessage(); ?></message>
+	</error>
+</response>

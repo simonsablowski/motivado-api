@@ -2,6 +2,7 @@
 
 class Application {
 	protected $configuration = array();
+	private $ErrorHandler = NULL;
 	private $Request = NULL;
 	private $OutputBuffer = NULL;
 	private $Session = NULL;
@@ -68,27 +69,19 @@ class Application {
 		try {
 			$this->setOutputBuffer(new OutputBuffer);
 			$this->getOutputBuffer()->start();
-			
-			header('Content-Type: text/xml; charset=utf-8');
-			printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-			
 			$this->setup();
 			$this->getController()->performAction($this->getRequest()->getAction(), $this->getRequest()->getParameters());
-			
 			$this->getOutputBuffer()->flush();
-		} catch (Exception $Error) {
-			$this->getOutputBuffer()->clean();
-			
-			$this->printLine("<response>");
-			$this->printLine("\t<status>Failure</status>");
-			$Error->dump();
-			$this->printLine("</response>");
-			
+		} catch (Error $Error) {
+			$this->getErrorHandler()->handle($Error);
 			$this->getOutputBuffer()->flush();
 		}
 	}
 	
 	final private function setup() {
+		header($this->getConfiguration('header'));
+		
+		$this->initializeErrorHandler();
 		$this->initializeSession();
 		$this->initializeDatabase();
 		$this->initializeController();
@@ -98,6 +91,12 @@ class Application {
 		$this->setRequest(new Request($query));
 		$this->getRequest()->setConfiguration($this->getConfiguration('Request'));
 		$this->getRequest()->analyze();
+	}
+	
+	final private function initializeErrorHandler() {
+		$this->setErrorHandler(new ErrorHandler);
+		$this->getErrorHandler()->setOutputBuffer($this->getOutputBuffer());
+		$this->getErrorHandler()->setSession($this->getSession());
 	}
 	
 	final private function initializeSession() {
@@ -123,7 +122,8 @@ class Application {
 		return !is_null($field) ? (isset($this->configuration[$field]) ? $this->configuration[$field] : NULL) : $this->configuration;
 	}
 	
-	protected function printLine($line, $arguments = array()) {
-		vprintf("\n" . $line, is_array($arguments) ? $arguments : array($arguments));
+	protected function displayView($View, $variables = array()) {
+		extract($variables);		
+		include dirname(__FILE__) . '/Views/' . $View;
 	}
 }

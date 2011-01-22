@@ -3,32 +3,29 @@
 class CoachingController extends Controller {
 	public function query($key) {
 		$Coaching = Coaching::findByKey($key);
-		$UserId = $this->getUser()->getId();
+		$Object = $Coaching->getFirstObject();
 		
-		$this->printLine("<objectsequence>");
-		$CurrentObject = $Coaching->getFirstObject();
-		
-		if ($CurrentObject->getType() == 'Coaching') {
-			$Coaching = $CurrentObject;
+		if ($Object->getType() == 'Coaching') {
+			$Coaching = $Object;
 		}
 		
-		$this->printLine("\t<title>%s</title>", $Coaching->getTitle());
-		$this->printLine("\t<description>%s</description>", $Coaching->getDescription());
-		
-		while (!is_null($CurrentObject)) {
-			if (($CurrentObject->getType() != 'SignIn' && $CurrentObject->getType() != 'Payment') || !$this->isSignedIn()) {
-				$CurrentObject->dump();
+		$Objects = array();
+		while (!is_null($Object)) {
+			if (($Object->getType() != 'SignIn' && $Object->getType() != 'Payment') || !$this->isSignedIn()) {
+				$Objects[] = $Object;
 				
-				if ((($CurrentObject->getType() == 'SignIn' || $CurrentObject->getType() == 'Payment') && !$this->isSignedIn())
-					|| $CurrentObject->getType() == 'Interrupt' || $CurrentObject->getType() == 'Coaching') {
+				if ((($Object->getType() == 'SignIn' || $Object->getType() == 'Payment') && !$this->isSignedIn())
+					|| $Object->getType() == 'Interrupt' || $Object->getType() == 'Coaching') {
 					break;
 				}
 			}
 			
-			$Ancestor = $CurrentObject;
-			$CurrentObject = $Ancestor->getNextObject($UserId);
+			$Object = $Object->getNextObject($this->getUser()->getId());
 		}
 		
-		$this->printLine("</objectsequence>");
+		$this->displayView('Coaching.query.xml', array(
+			'Coaching' => $Coaching,
+			'Objects' => $Objects
+		));
 	}
 }

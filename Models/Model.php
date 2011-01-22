@@ -6,6 +6,12 @@ abstract class Model extends Application {
 	protected static $defaultSorting = array('created');
 	protected $fields = array();
 	protected $requiredFields = array();
+	protected $hiddenFields = array(
+		'id',
+		'status',
+		'created',
+		'modified'
+	);
 	protected $data = array();
 	
 	public static function getClassName() {
@@ -192,9 +198,17 @@ abstract class Model extends Application {
 	}
 	
 	public function getData($field = NULL) {
-		if (is_null($field)) return $this->data;
-		else if (isset($this->data[$field])) return $this->data[$field];
-		else return NULL;
+		if (is_null($field)) {
+			$data = $this->data;
+			foreach ($this->getHiddenFields() as $field) {
+				unset($data[$field]);
+			}
+			return $data;
+		} else if (isset($this->data[$field])) {
+			return $this->data[$field];
+		} else {
+			return NULL;
+		}
 	}
 	
 	public function setData() {
@@ -241,7 +255,7 @@ abstract class Model extends Application {
 			$Object = $className::find($this->getPrimaryKeyValue(), $condition);
 			$Object->setData($this->getData());
 			$Object->update();
-		} catch (Exception $Error) {
+		} catch (Error $Error) {
 			$Object = new $className($this->getData());
 			$Object->save();
 		}

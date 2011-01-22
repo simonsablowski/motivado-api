@@ -2,25 +2,25 @@
 
 class AuthenticationController extends Controller {
 	public function index() {
-		if ($User = Session::getData('User')) {
+		if ($User = $this->getSession()->getData('User')) {
 			$this->setUser($User);
 		}
 		
-		$this->printLine("<authentication>");
-		$this->getUser()->dump();
-		$this->printLine("</authentication>");
+		$this->displayView('Authentication.index.xml', array(
+			'User' => $this->getUser()
+		));
 	}
 	
 	public function signIn($eMailAddress, $password) {
 		if ($User = User::findByEMailAddressAndPassword(array($eMailAddress, $password))) {
-			Session::setData('User', $User);
+			$this->getSession()->setData('User', $User);
 		}
 		
 		$this->index();
 	}
 	
 	public function signOut() {
-		Session::setData('User', NULL);
+		$this->getSession()->setData('User', NULL);
 		$this->setTemporaryUser();
 		
 		$this->index();
