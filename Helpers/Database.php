@@ -35,7 +35,7 @@ class Database {
 	}
 	
 	final protected static function setLink($link) {
-		self::$link = $link;
+		return self::$link = $link;
 	}
 	
 	protected static function getRequiredFields() {
