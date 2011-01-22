@@ -1,10 +1,11 @@
 <?php
 
 class Application {
-	private $Session = NULL;
-	private $Request = NULL;
-	private $Controller = NULL;
 	protected $configuration = array();
+	private $Request = NULL;
+	private $OutputBuffer = NULL;
+	private $Session = NULL;
+	private $Controller = NULL;
 	
 	public function __call($method, $parameters) {
 		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
@@ -44,8 +45,27 @@ class Application {
 	}
 	
 	final public function run() {
-		$this->setup();
-		$this->getController()->performAction($this->getRequest()->getAction(), $this->getRequest()->getParameters());
+		header('Content-Type: text/xml; charset=utf-8');
+		printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		
+		try {
+			$this->setOutputBuffer(new OutputBuffer);
+			$this->getOutputBuffer()->start();
+			
+			$this->setup();
+			$this->getController()->performAction($this->getRequest()->getAction(), $this->getRequest()->getParameters());
+			
+			$this->getOutputBuffer()->flush();
+		} catch (Exception $Error) {
+			$this->getOutputBuffer()->clean();
+			
+			$this->printLine("<response>");
+			$this->printLine("\t<status>Failure</status>");
+			$Error->dump();
+			$this->printLine("</response>");
+			
+			$this->getOutputBuffer()->flush();
+		}
 	}
 	
 	final private function setup() {
@@ -72,10 +92,12 @@ class Application {
 	
 	final private function initializeController() {
 		$ControllerName = $this->getRequest()->getController() . 'Controller';
+		if (!class_exists($ControllerName)) throw new Error('Invalid controller', $ControllerName);
+		
 		$this->setController(new $ControllerName);
 		$this->getController()->setConfiguration($this->getConfiguration());
 		$this->getController()->setSession($this->getSession());
-		$this->getController()->setUser(new User(array('firstName' => 'Simon')));//TODO: dummy code
+		$this->getController()->setUser(new User(array('id' => 1, 'firstName' => 'Simon')));//TODO: dummy code
 	}
 	
 	protected function getConfiguration($field = NULL) {
