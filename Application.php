@@ -117,7 +117,6 @@ class Application {
 		$this->setController(new $ControllerName);
 		$this->getController()->setConfiguration($this->getConfiguration());
 		$this->getController()->setSession($this->getSession());
-		$this->getController()->setUser(new User(array('id' => 1, 'firstName' => 'Simon')));//TODO: dummy code
 	}
 	
 	protected function getConfiguration($field = NULL) {
