@@ -37,7 +37,7 @@ class Application {
 			case 'get':
 				return $this->$property;
 			case 'is':
-				return $this->$property == 'yes';
+				return $this->$property === TRUE;
 			case 'set':
 				return $this->$property = $parameters[0];
 		}
@@ -53,7 +53,7 @@ class Application {
 			case 'get':
 				return $className::$$property;
 			case 'is':
-				return $className::$$property == 'yes';
+				return $className::$$property === TRUE;
 			case 'set':
 				return $className::$$property = $parameters[0];
 		}
