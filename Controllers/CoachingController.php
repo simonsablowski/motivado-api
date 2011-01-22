@@ -5,7 +5,7 @@ class CoachingController extends Controller {
 		return CoachingFinder::find($CoachingId)->getFirstObject();
 	}
 	
-	public function dumpCoachingPath($key) {
+	public function query($key) {
 		$Coaching = CoachingFinder::findByKey($key);
 		$UserId = $this->getUser()->getId();
 		
