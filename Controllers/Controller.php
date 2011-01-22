@@ -5,7 +5,7 @@ abstract class Controller extends Application {
 	protected $User = NULL;
 	
 	public function __construct() {
-		$this->setUser(new User(array('id' => 1, 'firstName' => 'Simon')));//TODO: dummy code
+		$this->setUser(new TemporaryUser);
 	}
 	
 	protected function performAction($actionName, $parameters) {
