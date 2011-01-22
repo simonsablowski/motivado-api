@@ -21,18 +21,16 @@ class ObjectSequence extends Model {
 	
 	protected $Coaching = NULL;
 	
-	public static function findNextObjects($Object, $data = array()) {
-		$ObjectSequences = self::findAll(array_merge(array(
+	public static function findNextObjects($Object) {
+		$ObjectSequences = self::findAll(array(
 			'CoachingId' => $Object->getCoachingId(),
 			'LeftId' => $Object->getId()
-		), $data));
+		));
 		
 		$NextObjects = array();
 		foreach ($ObjectSequences as $ObjectSequence) {
-			$NextObject = ObjectFinder::find($ObjectSequence->getRightId());
-			$NextObjects[] = $NextObject;
+			$NextObjects[] = Object::find($ObjectSequence->getRightId());
 		}
-		
 		return $NextObjects;
 	}
 }

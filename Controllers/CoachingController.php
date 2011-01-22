@@ -16,27 +16,17 @@ class CoachingController extends Controller {
 		$this->printLine("\t<description>%s</description>", $Coaching->getDescription());
 		
 		while (!is_null($CurrentObject)) {
-			if (($CurrentObject->getType() == 'SignIn' || $CurrentObject->getType() == 'Payment') && isSignedIn()) {
-				$CurrentObject = $CurrentObject->getNextObject($UserId);
-			}
-			
-			$CurrentObject->dump();
-			
-			if (($CurrentObject->getType() == 'SignIn' || $CurrentObject->getType() == 'Payment') && !isSignedIn()) {
-				break;
-			} else if ($CurrentObject->getType() == 'Interrupt') {
-				if ($interruptText = $CurrentObject->getText()) $this->getSession()->setData('interruptText', $interruptText);
-				break;
-			} else if ($CurrentObject->getType() == 'Questionnaire' && $CurrentObject->isActivated($UserId)) {
-				break;
+			if (($CurrentObject->getType() != 'SignIn' && $CurrentObject->getType() != 'Payment') || !$this->isSignedIn()) {
+				$CurrentObject->dump();
+				
+				if ((($CurrentObject->getType() == 'SignIn' || $CurrentObject->getType() == 'Payment') && !$this->isSignedIn())
+					|| $CurrentObject->getType() == 'Interrupt' || $CurrentObject->getType() == 'Coaching') {
+					break;
+				}
 			}
 			
 			$Ancestor = $CurrentObject;
 			$CurrentObject = $Ancestor->getNextObject($UserId);
-			
-			if (!is_null($CurrentObject) && $CurrentObject->getType() == 'Coaching') {
-				break;
-			}
 		}
 		
 		$this->printLine("</objectsequence>");
