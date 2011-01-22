@@ -11,7 +11,7 @@ class Database {
 		
 		foreach (self::getRequiredFields() as $field) {
 			if (!array_key_exists($field, $configuration)) {
-				throw new FatalError('Required fields missing', array('array_keys($configuration)' => array_keys($configuration), 'self::getRequiredFields()' => self::getRequiredFields()));
+				throw new FatalError('Required fields missing', array('Given fields' => array_keys($configuration), 'Required fields()' => self::getRequiredFields()));
 			}
 			
 			self::$configuration[$field] = $configuration[$field];

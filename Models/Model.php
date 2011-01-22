@@ -75,7 +75,7 @@ abstract class Model extends Application {
 			$data = func_get_arg(0);
 		} else {
 			if (count($requiredFields) != count($arguments)) {
-				throw new FatalError('Number of required fields does not match number of arguments', array('$arguments' => $arguments, '$requiredFields' => $requiredFields));
+				throw new FatalError('Number of required fields does not match number of arguments', array('Arguments' => $arguments, 'Required fields' => $requiredFields));
 			}
 			
 			$data = $arguments ? array_combine($requiredFields, $arguments) : array();
