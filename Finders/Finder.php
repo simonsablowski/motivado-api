@@ -67,7 +67,7 @@ abstract class Finder extends Application {
 		$condition = array_merge(is_array($primaryKeyValue) ? $primaryKeyValue : array(self::getPrimaryKey() => $primaryKeyValue), self::resolveCondition($condition));
 		$result = Database::select(self::getTableName(), $condition, 1);
 		$row = Database::fetch($result);
-		if (!$row) throw new Error('Record not found', array('$primaryKeyValue' => $primaryKeyValue, '$condition' => $condition));
+		if (!$row) throw new Error('Record not found', array('Primary key value' => $primaryKeyValue, 'Condition' => $condition));
 		
 		$modelName = self::getModelName();
 		return new $modelName($row);
@@ -77,7 +77,7 @@ abstract class Finder extends Application {
 		$condition = array_merge(array_combine($fields, $values), self::resolveCondition($condition));
 		$result = Database::select(self::getTableName(), $condition, 1);
 		$row = Database::fetch($result);
-		if (!$row) throw new Error('Record not found', array('$fields' => $fields, '$values' => $values, '$condition' => $condition));
+		if (!$row) throw new Error('Record not found', array('Fields' => $fields, 'Values' => $values, 'Condition' => $condition));
 		
 		$modelName = self::getModelName();
 		return new $modelName($row);
