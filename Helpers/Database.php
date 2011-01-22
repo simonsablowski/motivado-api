@@ -27,7 +27,7 @@ class Database {
 	}
 	
 	final protected static function setClassName($className) {
-		self::$className = $className;
+		return self::$className = $className;
 	}
 	
 	final protected static function getLink() {
