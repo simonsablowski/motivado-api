@@ -8,7 +8,7 @@ abstract class Model extends Application {
 	
 	public function __call($method, $parameters) {
 		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
-		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new Error('Invalid method format', $method);
+		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new FatalError('Invalid method format', $method);
 		
 		$operation = $methodParts[0][0];
 		array_shift($methodParts[0]);
@@ -69,20 +69,17 @@ abstract class Model extends Application {
 				if ($isField & $hasLoader) {
 					$finderName = $property . 'Finder';
 					$getterName = 'get' . $property . 'Id';
-					$this->$property = $finderName::find($this->$getterName());
-					return;
+					return $this->$property = $finderName::find($this->$getterName());
 				}
 			case 'set':
 				if ($isField) {
-					$this->setData($property, $parameters[0]);
-					return;
+					return $this->setData($property, $parameters[0]);
 				} else if ($propertyExists) {
-					$this->$property = $parameters[0];
-					return;
+					return $this->$property = $parameters[0];
 				}
 		}
 		
-		throw new Error('Undeclared property', $property);
+		throw new FatalError('Undeclared property', $property);
 	}
 	
 	public function __construct() {
@@ -93,7 +90,7 @@ abstract class Model extends Application {
 			$data = func_get_arg(0);
 		} else {
 			if (count($requiredFields) != count($arguments)) {
-				throw new Error('Number of required fields does not match number of arguments', array('$arguments' => $arguments, '$requiredFields' => $requiredFields));
+				throw new FatalError('Number of required fields does not match number of arguments', array('$arguments' => $arguments, '$requiredFields' => $requiredFields));
 			}
 			
 			$data = $arguments ? array_combine($requiredFields, $arguments) : array();
@@ -101,7 +98,7 @@ abstract class Model extends Application {
 		
 		foreach ($requiredFields as $field) {
 			if (!array_key_exists($field, $data)) {
-				throw new Error('Required fields missing', array('array_keys($data)' => array_keys($data), '$requiredFields' => $requiredFields));
+				throw new FatalError('Required fields missing', array('array_keys($data)' => array_keys($data), '$requiredFields' => $requiredFields));
 			}
 		}
 		

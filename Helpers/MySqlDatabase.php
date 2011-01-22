@@ -3,16 +3,24 @@
 class MySqlDatabase extends SqlDatabase {
 	public static function connect() {
 		if (!self::setLink(mysql_connect(self::getConfiguration('host'), self::getConfiguration('user'), self::getConfiguration('password')))) {
-			throw new Error('Cannot connect to database host', self::getConfiguration('host'));
+			throw new FatalError('Cannot connect to database host', self::getConfiguration('host'));
 		}
 		
 		if (!mysql_select_db(self::getConfiguration('name'), self::getLink())) {
-			throw new Error('Cannot select database', self::getConfiguration('name'));
+			throw new FatalError('Cannot select database', self::getConfiguration('name'));
 		}
 	}
 	
+	protected static function getError() {
+		return mysql_error(self::getLink());
+	}
+	
 	public static function query($statement) {
-		return mysql_query($statement);
+		if (!$result = mysql_query($statement)) {
+			throw new FatalError('Invalid database query', self::getError());
+		} else {
+			return $result;
+		}
 	}
 	
 	public static function fetch($result) {

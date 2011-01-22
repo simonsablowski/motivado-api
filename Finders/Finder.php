@@ -8,28 +8,12 @@ abstract class Finder extends Application {
 	
 	public static function __callStatic($method, $parameters) {
 		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
-		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new Exception('Invalid method format', $method);
+		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new FatalError('Invalid method format', $method);
 		
 		$operation = $methodParts[0][0];
 		array_shift($methodParts[0]);
 		
-		if ($operation == 'get') {
-			$propertyCapitalized = implode('', $methodParts[0]);
-			$property = strtolower(substr($propertyCapitalized, 0, 1)) . substr($propertyCapitalized, 1);
-			
-			$propertyExists = FALSE;
-			
-			if (property_exists(get_called_class(), $property)) {
-				$propertyExists = TRUE;
-			} else if (property_exists(get_called_class(), $propertyCapitalized)) {
-				$propertyExists = TRUE;
-				$property = $propertyCapitalized;
-			}
-			
-			if (!$propertyExists) throw new Error('Undeclared property', $property);
-			
-			return self::$$property;
-		}
+		if ($operation != 'find') return parent::__callStatic($method, $parameters);
 		
 		array_shift($methodParts[0]);
 		$fieldNames = implode('', $methodParts[0]);

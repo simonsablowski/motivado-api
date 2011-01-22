@@ -1,8 +1,16 @@
 <?php
 
 abstract class OdbcDatabase extends SqlDatabase {
+	protected static function getError() {
+		return odbc_error(self::getLink());
+	}
+	
 	public static function query($statement) {
-		return odbc_exec(self::getLink(), $statement);
+		if (!$result = odbc_exec(self::getLink(), $statement)) {
+			throw new FatalError('Invalid database query', self::getError($result));
+		} else {
+			return $result;
+		}
 	}
 	
 	public static function fetch($result) {
