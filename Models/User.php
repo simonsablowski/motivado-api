@@ -3,6 +3,8 @@
 class User extends Object {
 	protected $fields = array(
 		'id',
+		'eMailAddress',
+		'password',
 		'firstName',
 		'lastName',
 		'status',
