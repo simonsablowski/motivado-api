@@ -7,28 +7,13 @@ abstract class Model extends Application {
 	protected $data = array();
 	
 	public function __call($method, $parameters) {
-		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
-		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new FatalError('Invalid method format', $method);
+		list($operation, $property, $propertyExists, $propertyCapitalized) = $this->resolveMethod($this, $method);
 		
-		$operation = $methodParts[0][0];
-		array_shift($methodParts[0]);
-		
-		$propertyCapitalized = implode('', $methodParts[0]);
-		$property = strtolower(substr($propertyCapitalized, 0, 1)) . substr($propertyCapitalized, 1);
-		
-		$propertyExists = FALSE;
 		$isField = FALSE;
 		$hasLoader = FALSE;
 		
-		if (property_exists($this, $property)) {
-			$propertyExists = TRUE;
-		} else if (property_exists($this, $propertyCapitalized)) {
-			$propertyExists = TRUE;
-			$property = $propertyCapitalized;
-			
-			if (method_exists($this, 'load' . $property) || property_exists($this, $property . 'Id')) {
-				$hasLoader = TRUE;
-			}
+		if (method_exists($this, 'load' . $property) || property_exists($this, $property . 'Id')) {
+			$hasLoader = TRUE;
 		}
 		
 		if ($this->isField($property)) {
