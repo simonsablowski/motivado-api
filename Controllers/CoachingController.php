@@ -2,7 +2,7 @@
 
 class CoachingController extends Controller {
 	public function query($key) {
-		$Coaching = CoachingFinder::findByKey($key);
+		$Coaching = Coaching::findByKey($key);
 		$UserId = $this->getUser()->getId();
 		
 		$this->printLine("<objectsequence>");

@@ -23,7 +23,7 @@ class Object extends Model {
 	protected $Video = NULL;
 	
 	protected function loadNextObjects($UserId = NULL, $condition = array()) {
-		$this->setNextObjects(ObjectSequenceFinder::findNextObjects($this, $condition));
+		$this->setNextObjects(ObjectSequence::findNextObjects($this, $condition));
 	}
 	
 	public function getNextObjects($UserId = NULL, $condition = array()) {
@@ -42,12 +42,12 @@ class Object extends Model {
 	}
 	
 	/*protected function loadNextObjectSuitableToCharacterTraits($UserId) {
-		$User = UserFinder::find($UserId, array('status' => NULL));
+		$User = User::find($UserId, array('status' => NULL));
 		$NextObjects = $this->getNextObjects($UserId);
 		$IndependentObjects = array();
 		
 		foreach ($NextObjects as $NextObject) {
-			$ObjectCharacterTraitDependencies = ObjectCharacterTraitDependencyFinder::findAll(array(
+			$ObjectCharacterTraitDependencies = ObjectCharacterTraitDependency::findAll(array(
 				'ObjectId' => $NextObject->getId()
 			));
 			
@@ -81,7 +81,7 @@ class Object extends Model {
 	
 	protected function isIndependent($Ancestor = NULL) {
 		try {
-			ObjectCharacterTraitDependencyFinder::findFirst(array(
+			ObjectCharacterTraitDependency::findFirst(array(
 				'ObjectId' => $this->getId()
 			));
 			return FALSE;
