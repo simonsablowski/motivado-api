@@ -10,10 +10,10 @@ class OutputBuffer extends Application {
 	}
 	
 	public function clean() {
-		//ob_clean();
+		ob_clean();
 	}
 	
 	public function flush() {
-		//ob_flush();
+		ob_flush();
 	}
 }
