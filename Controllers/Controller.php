@@ -5,6 +5,10 @@ abstract class Controller extends Application {
 	protected $User = NULL;
 	
 	public function __construct() {
+		$this->setTemporaryUser();
+	}
+	
+	protected function setTemporaryUser() {
 		$this->setUser(new TemporaryUser);
 	}
 	

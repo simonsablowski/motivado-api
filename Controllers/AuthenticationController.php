@@ -21,7 +21,7 @@ class AuthenticationController extends Controller {
 	
 	public function signOut() {
 		Session::setData('User', NULL);
-		$this->setUser(new TemporaryUser);
+		$this->setTemporaryUser();
 		
 		$this->index();
 	}
