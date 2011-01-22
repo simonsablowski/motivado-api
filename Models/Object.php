@@ -16,6 +16,14 @@ class Object extends Model {
 		'type',
 		'title',
 	);
+	protected $hiddenFields = array(
+		'id',
+		'CoachingId',
+		'type',
+		'status',
+		'created',
+		'modified'
+	);
 	
 	protected $Coaching = NULL;
 	protected $NextObject = NULL;
@@ -85,7 +93,7 @@ class Object extends Model {
 				'ObjectId' => $this->getId()
 			));
 			return FALSE;
-		} catch (Exception $Error) {
+		} catch (Error $Error) {
 			return TRUE;
 		}
 	}
@@ -107,41 +115,5 @@ class Object extends Model {
 	public function getNextObject($UserId = NULL, $condition = array()) {
 		if (is_null($this->NextObject)) $this->loadNextObject($UserId, $condition);
 		return $this->NextObject;
-	}
-	
-	public function getDumpsHiddenFields() {
-		return array('id', 'CoachingId', 'type', 'status', 'created', 'modified');
-	}
-	
-	public function dumpHeader($depth) {
-		$this->printLine("%s<%s id=\"%d\"%s>", array(str_repeat("\t", $depth), strtolower($this->getClassName()), $this->getId(), $this->isField('type') ? sprintf(" type=\"%s\"", $this->getType()) : ''));
-	}
-	
-	public function cleanDumpsProperty($value) {
-		$value = preg_replace('/&(.+);/', '', $value);
-		$value = preg_replace('/<br([\s\/]*)>/', "\n", $value);
-		$value = preg_replace('/<(?:[^"\']+?|.+?(?:"|\').*?(?:"|\')?.*?)*?>/', '$1', $value);
-		$value = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $value);
-		return $value;
-	}
-	
-	public function dumpProperty($field, $value, $depth) {
-		$field = strtolower($field);
-		$value = $this->cleanDumpsProperty($value);
-		$this->printLine("%s" . ($value != '' ? "<%s>%s</%s>" : "<%s />"), array(str_repeat("\t", $depth + 1), $field, $value, $field));
-	}
-	
-	public function dumpFooter($depth) {
-		$this->printLine("%s</%s>", array(str_repeat("\t", $depth), strtolower($this->getClassName())));
-	}
-	
-	//TODO: also dump nested Video as well as unserialized data field (needs other name)
-	public function dump($depth = 1) {
-		$this->dumpHeader($depth);
-		foreach ($this->getData() as $field => $value) {
-			if (in_array($field, $this->getDumpsHiddenFields())) continue;
-			$this->dumpProperty($field, $value, $depth);
-		}
-		$this->dumpFooter($depth);
 	}
 }

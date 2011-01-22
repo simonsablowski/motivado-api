@@ -1,0 +1,9 @@
+<objectsequence>
+	<title><? echo $Coaching->getTitle(); ?></title>
+	<description><? echo $Coaching->getDescription(); ?></description>
+	<objects>
+<? foreach ($Objects as $Object): ?>
+	<? include 'Object.xml'; ?>
+<? endforeach; ?>
+	</objects>
+</objectsequence>
