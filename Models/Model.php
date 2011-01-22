@@ -1,10 +1,90 @@
 <?php
 
 abstract class Model extends Application {
-	protected $primaryKey = 'id';
+	protected static $primaryKey = 'id';
+	protected static $defaultCondition = array('status' => 'active');
+	protected static $defaultSorting = array('created');
 	protected $fields = array();
 	protected $requiredFields = array();
 	protected $data = array();
+	
+	public static function getClassName() {
+		return get_called_class();
+	}
+	
+	public static function getTableName() {
+		return strtolower(self::getClassName());
+	}
+	
+	public static function __callStatic($method, $parameters) {
+		list($operation, , , , $methodParts) = self::resolveMethod(get_called_class(), $method);
+		if ($operation != 'find') return parent::__callStatic($method, $parameters);
+		
+		array_shift($methodParts[0]);
+		$fieldNames = implode('', $methodParts[0]);
+		
+		$fields = explode('And', implode('', $methodParts[0]));
+		foreach ($fields as $n => $field) {
+			$fields[$n] = strtolower(substr($field, 0, 1)) . substr($field, 1);
+		}
+		
+		$values = $parameters;
+		$condition = NULL;
+		if ((!is_array(pos($values)) && count($values) == count($fields) + 1)
+				|| (is_array(pos($values) && count($values) == 2))) {
+			$condition = end($values);
+			array_pop($values);
+		}
+		if (is_array(pos($values)) && count($values) == 1) $values = pos($values);
+		
+		return self::findBy($fields, $values, $condition);
+	}
+	
+	protected static function resolveCondition($condition) {
+		if (is_null($condition)) return self::getDefaultCondition();
+		else return array_merge(self::getDefaultCondition(), $condition);
+	}
+	
+	public static function findAll($condition = NULL, $sorting = NULL, $limit = NULL) {
+		$Objects = array();
+		$result = Database::select(self::getTableName(), self::resolveCondition($condition), $limit, !is_null($sorting) ? $sorting : self::getDefaultSorting());
+		while ($row = Database::fetch($result)) {
+			$modelName = self::getClassName();
+			$Objects[] = new $modelName($row);
+		}
+		return $Objects;
+	}
+	
+	public static function countAll($condition = NULL) {
+		$result = Database::select(self::getTableName(), self::resolveCondition($condition));
+		return Database::count($result);
+	}
+	
+	public static function findFirst($condition = NULL, $sorting = NULL) {
+		$Objects = self::findAll($condition, $sorting, 1);
+		if ($Objects) return pos($Objects);
+		else throw new Error('Record not found', $condition);
+	}
+	
+	public static function find($primaryKeyValue, $condition = NULL) {
+		$condition = array_merge(is_array($primaryKeyValue) ? $primaryKeyValue : array(self::getPrimaryKey() => $primaryKeyValue), self::resolveCondition($condition));
+		$result = Database::select(self::getTableName(), $condition, 1);
+		$row = Database::fetch($result);
+		if (!$row) throw new Error('Record not found', array('Primary key value' => $primaryKeyValue, 'Condition' => $condition));
+		
+		$modelName = self::getClassName();
+		return new $modelName($row);
+	}
+	
+	public static function findBy($fields, $values, $condition = NULL) {
+		$condition = array_merge(array_combine($fields, $values), self::resolveCondition($condition));
+		$result = Database::select(self::getTableName(), $condition, 1);
+		$row = Database::fetch($result);
+		if (!$row) throw new Error('Record not found', array('Fields' => $fields, 'Values' => $values, 'Condition' => $condition));
+		
+		$modelName = self::getClassName();
+		return new $modelName($row);
+	}
 	
 	public function __call($method, $parameters) {
 		list($operation, $property, $propertyExists, $propertyCapitalized) = $this->resolveMethod($this, $method);
@@ -52,9 +132,8 @@ abstract class Model extends Application {
 				}
 			case 'load':
 				if ($isField & $hasLoader) {
-					$finderName = $property . 'Finder';
 					$getterName = 'get' . $property . 'Id';
-					return $this->$property = $finderName::find($this->$getterName());
+					return $this->$property = $property::find($this->$getterName());
 				}
 			case 'set':
 				if ($isField) {
@@ -92,14 +171,6 @@ abstract class Model extends Application {
 			$setter = 'set' . ucfirst($property);
 			$this->$setter($value);
 		}
-	}
-	
-	public function getModelName() {
-		return get_class($this);
-	}
-	
-	public function getTableName() {
-		return strtolower($this->getModelName());
 	}
 	
 	protected function getPrimaryKeyValue() {
@@ -165,14 +236,13 @@ abstract class Model extends Application {
 	}
 	
 	public function saveSafely($condition = array('status' => NULL)) {
-		$modelName = $this->getModelName();
-		$finderName = $modelName . 'Finder';
+		$className = get_class($this);
 		try {
-			$Object = $finderName::find($this->getPrimaryKeyValue(), $condition);
+			$Object = $className::find($this->getPrimaryKeyValue(), $condition);
 			$Object->setData($this->getData());
 			$Object->update();
 		} catch (Exception $Error) {
-			$Object = new $modelName($this->getData());
+			$Object = new $className($this->getData());
 			$Object->save();
 		}
 	}
