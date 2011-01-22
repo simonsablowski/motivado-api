@@ -7,42 +7,9 @@ class Application {
 	private $Session = NULL;
 	private $Controller = NULL;
 	
-	public function __call($method, $parameters) {
+	protected static function resolveMethod($className, $method) {
 		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
 		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new FatalError('Invalid method format', $method);
-		
-		$operation = $methodParts[0][0];
-		array_shift($methodParts[0]);
-		
-		$propertyCapitalized = implode('', $methodParts[0]);
-		$property = strtolower(substr($propertyCapitalized, 0, 1)) . substr($propertyCapitalized, 1);
-		
-		$propertyExists = FALSE;
-		
-		if (property_exists($this, $property)) {
-			$propertyExists = TRUE;
-		} else if (property_exists($this, $propertyCapitalized)) {
-			$propertyExists = TRUE;
-			$property = $propertyCapitalized;
-		}
-		
-		if (!$propertyExists) throw new FatalError('Undeclared property', $property);
-		
-		switch ($operation) {
-			case 'get':
-				return $this->$property;
-			case 'is':
-				return $this->$property == 'yes';
-			case 'set':
-				return $this->$property = $parameters[0];
-		}
-	}
-	
-	public static function __callStatic($method, $parameters) {
-		$className = get_called_class();
-		
-		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
-		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new Exception('Invalid method format', $method);
 		
 		$operation = $methodParts[0][0];
 		array_shift($methodParts[0]);
@@ -59,6 +26,27 @@ class Application {
 			$property = $propertyCapitalized;
 		}
 		
+		return array($operation, $property, $propertyExists, $propertyCapitalized, $methodParts);
+	}
+	
+	public function __call($method, $parameters) {
+		list($operation, $property, $propertyExists) = $this->resolveMethod($this, $method);
+		if (!$propertyExists) throw new FatalError('Undeclared property', $property);
+		
+		switch ($operation) {
+			case 'get':
+				return $this->$property;
+			case 'is':
+				return $this->$property == 'yes';
+			case 'set':
+				return $this->$property = $parameters[0];
+		}
+	}
+	
+	public static function __callStatic($method, $parameters) {
+		$className = get_called_class();
+		
+		list($operation, $property, $propertyExists) = self::resolveMethod($className, $method);
 		if (!$propertyExists) throw new FatalError('Undeclared property', $property);
 		
 		switch ($operation) {
@@ -83,7 +71,6 @@ class Application {
 			
 			header('Content-Type: text/xml; charset=utf-8');
 			printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-			//print '<pre>';
 			
 			$this->setup();
 			$this->getController()->performAction($this->getRequest()->getAction(), $this->getRequest()->getParameters());

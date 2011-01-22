@@ -7,12 +7,7 @@ abstract class Finder extends Application {
 	protected static $defaultSorting = array('created');
 	
 	public static function __callStatic($method, $parameters) {
-		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
-		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new FatalError('Invalid method format', $method);
-		
-		$operation = $methodParts[0][0];
-		array_shift($methodParts[0]);
-		
+		list($operation, , , , $methodParts) = self::resolveMethod(get_called_class(), $method);
 		if ($operation != 'find') return parent::__callStatic($method, $parameters);
 		
 		array_shift($methodParts[0]);
