@@ -13,16 +13,6 @@ abstract class SqlDatabase extends Database {
 		return self::$requiredFields;
 	}
 	
-	public static function connect() {
-		if (!self::setLink(call_user_func_array(array(self::getClassName(), 'connectToHost'), array(self::getConfiguration('host'), self::getConfiguration('user'), self::getConfiguration('password'))))) {
-			throw new Error('Cannot connect to database host', self::getConfiguration('host'));
-		}
-		
-		if (!call_user_func_array(array(self::getClassName(), 'selectDatabase'), array(self::getConfiguration('name'), self::getLink()))) {
-			throw new Error('Cannot select database', self::getConfiguration('name'));
-		}
-	}
-	
 	protected static function format($value) {
 		return sprintf(is_int($value) ? "%d" : ($value == 'NOW()' ? "%s" : "'%s'"), self::escape($value));
 	}
