@@ -9,7 +9,7 @@ class Application {
 	
 	public function __call($method, $parameters) {
 		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
-		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new Error('Invalid method format', $method);
+		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new FatalError('Invalid method format', $method);
 		
 		$operation = $methodParts[0][0];
 		array_shift($methodParts[0]);
@@ -26,7 +26,7 @@ class Application {
 			$property = $propertyCapitalized;
 		}
 		
-		if (!$propertyExists) throw new Error('Undeclared property', $property);
+		if (!$propertyExists) throw new FatalError('Undeclared property', $property);
 		
 		switch ($operation) {
 			case 'get':
@@ -34,23 +34,56 @@ class Application {
 			case 'is':
 				return $this->$property == 'yes';
 			case 'set':
-				$this->$property = $parameters[0];
-				return;
+				return $this->$property = $parameters[0];
 		}
 	}
 	
-	public function __construct($configuration, $RequestQuery) {
+	public static function __callStatic($method, $parameters) {
+		$className = get_called_class();
+		
+		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
+		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new Exception('Invalid method format', $method);
+		
+		$operation = $methodParts[0][0];
+		array_shift($methodParts[0]);
+		
+		$propertyCapitalized = implode('', $methodParts[0]);
+		$property = strtolower(substr($propertyCapitalized, 0, 1)) . substr($propertyCapitalized, 1);
+		
+		$propertyExists = FALSE;
+		
+		if (property_exists($className, $property)) {
+			$propertyExists = TRUE;
+		} else if (property_exists($className, $propertyCapitalized)) {
+			$propertyExists = TRUE;
+			$property = $propertyCapitalized;
+		}
+		
+		if (!$propertyExists) throw new FatalError('Undeclared property', $property);
+		
+		switch ($operation) {
+			case 'get':
+				return $className::$$property;
+			case 'is':
+				return $className::$$property == 'yes';
+			case 'set':
+				return $className::$$property = $parameters[0];
+		}
+	}
+	
+	public function __construct($configuration, $query) {
 		$this->setConfiguration($configuration);
-		$this->analyzeRequest($RequestQuery);
+		$this->analyzeRequest($query);
 	}
 	
 	final public function run() {
-		header('Content-Type: text/xml; charset=utf-8');
-		printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		
 		try {
 			$this->setOutputBuffer(new OutputBuffer);
 			$this->getOutputBuffer()->start();
+			
+			header('Content-Type: text/xml; charset=utf-8');
+			printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+			//print '<pre>';
 			
 			$this->setup();
 			$this->getController()->performAction($this->getRequest()->getAction(), $this->getRequest()->getParameters());
@@ -74,8 +107,8 @@ class Application {
 		$this->initializeController();
 	}
 	
-	final private function analyzeRequest($RequestQuery) {
-		$this->setRequest(new Request($RequestQuery));
+	final private function analyzeRequest($query) {
+		$this->setRequest(new Request($query));
 		$this->getRequest()->setConfiguration($this->getConfiguration('Request'));
 		$this->getRequest()->analyze();
 	}
@@ -92,7 +125,7 @@ class Application {
 	
 	final private function initializeController() {
 		$ControllerName = $this->getRequest()->getController() . 'Controller';
-		if (!class_exists($ControllerName)) throw new Error('Invalid controller', $ControllerName);
+		if (!class_exists($ControllerName)) throw new FatalError('Invalid controller', $ControllerName);
 		
 		$this->setController(new $ControllerName);
 		$this->getController()->setConfiguration($this->getConfiguration());

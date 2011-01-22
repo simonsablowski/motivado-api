@@ -1,13 +1,12 @@
 <?php
 
 class Error extends Exception {
-	protected $type = NULL;
+	protected $type = 'Warning';
 	protected $details = NULL;
 	
-	public function __construct($message, $details = NULL, $type = 'Warning') {
+	public function __construct($message, $details = NULL) {
 		$this->setMessage($message);
 		$this->setDetails($details);
-		$this->setType($type);
 	}
 	
 	public function getDetails() {
@@ -18,16 +17,20 @@ class Error extends Exception {
 		return $this->type;
 	}
 	
-	public function setMessage($value) {
+	protected function setMessage($value) {
 		return $this->message = $value;
 	}
 	
-	public function setDetails($value) {
+	protected function setDetails($value) {
 		return $this->details = $value;
 	}
 	
-	public function setType($value) {
-		return $this->type = $value;
+	protected function format($variable) {
+		ob_start();
+		var_dump($variable);
+		$formatted = trim(ob_get_contents());
+		ob_end_clean();
+		return $formatted;
 	}
 	
 	public function __toString() {
@@ -35,6 +38,8 @@ class Error extends Exception {
 		$string .= sprintf("\n\t<errortype>%s</errortype>", $this->getType());
 		$string .= sprintf("\n\t<errorcode>%s</errorcode>", $this->getCode());
 		$string .= sprintf("\n\t<errormessage>%s</errormessage>", $this->getMessage());
+		//$string .= sprintf("\n\t<errordetails>%s</errordetails>", $this->format($this->getDetails()));
+		//$string .= sprintf("\n%s", $this->getTraceAsString());
 		return $string;
 	}
 	

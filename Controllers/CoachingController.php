@@ -44,6 +44,5 @@ class CoachingController extends Controller {
 		}
 		
 		$this->printLine("</objectsequence>");
-		$this->getOutputBuffer()->flush();
 	}
 }
