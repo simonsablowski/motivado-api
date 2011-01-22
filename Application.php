@@ -8,7 +8,7 @@ class Application {
 	private $Controller = NULL;
 	
 	protected static function resolveMethod($className, $method) {
-		preg_match_all('/(^|[A-Z]{1})([a-z]+)/', $method, $methodParts);
+		preg_match_all('/(^|[A-Z]{1})([a-z]*)/', $method, $methodParts);
 		if (!isset($methodParts[0][0]) || !isset($methodParts[0][1])) throw new FatalError('Invalid method format', $method);
 		
 		$operation = $methodParts[0][0];

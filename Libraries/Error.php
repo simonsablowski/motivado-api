@@ -38,8 +38,8 @@ class Error extends Exception {
 		$string .= sprintf("\n\t<errortype>%s</errortype>", $this->getType());
 		$string .= sprintf("\n\t<errorcode>%s</errorcode>", $this->getCode());
 		$string .= sprintf("\n\t<errormessage>%s</errormessage>", $this->getMessage());
-		//$string .= sprintf("\n\t<errordetails>%s</errordetails>", $this->format($this->getDetails()));
-		//$string .= sprintf("\n%s", $this->getTraceAsString());
+		// $string .= sprintf("\n\t<errordetails>%s</errordetails>", $this->format($this->getDetails()));
+		// $string .= sprintf("\n%s", $this->getTraceAsString());
 		return $string;
 	}
 	
