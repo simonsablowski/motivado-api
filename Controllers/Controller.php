@@ -5,11 +5,23 @@ abstract class Controller extends Application {
 	protected $User = NULL;
 	
 	public function __construct() {
-		$this->setTemporaryUser();
+		
+	}
+	
+	protected function updateUser() {
+		if ($User = $this->getSession()->getData('User')) {
+			$this->setUser($User);
+		} else {
+			$this->setTemporaryUser();
+		}
 	}
 	
 	protected function setTemporaryUser() {
-		$this->setUser(new TemporaryUser);
+		return $this->setUser(new TemporaryUser);
+	}
+	
+	protected function isSignedIn() {
+		return !$this->getUser()->isTemporary();
 	}
 	
 	protected function performAction($actionName, $parameters) {

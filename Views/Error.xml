@@ -4,5 +4,7 @@
 		<type><? echo $Error->getType(); ?></type>
 		<code><? echo $Error->getCode(); ?></code>
 		<message><? echo $Error->getMessage(); ?></message>
+		<!--details><? print_r($Error->getDetails()); ?></details-->
+		<!--trace><? echo $Error->getTraceAsString(); ?></trace-->
 	</error>
 </response>
