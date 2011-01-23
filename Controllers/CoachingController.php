@@ -1,6 +1,6 @@
 <?php
 
-class CoachingController extends Controller {
+class CoachingController extends UserInteractionController {
 	public function query($key) {
 		$this->updateUser();
 		
