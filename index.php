@@ -2,8 +2,7 @@
 
 error_reporting(E_ALL);
 
-require_once 'configuration/locals.php';
-require_once 'configuration/settings.php';
+require_once 'configuration.php';
 require_once 'Application.php';
 
 function __autoload($className) {
