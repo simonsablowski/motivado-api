@@ -16,5 +16,5 @@ function __autoload($className) {
 	}
 }
 
-$Application = new Application($configuration, isset($_GET['request']) ? $_GET['request'] : NULL);
+$Application = new Application($configuration, isset($_GET['query']) ? $_GET['query'] : NULL);
 $Application->run();
