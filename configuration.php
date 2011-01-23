@@ -9,8 +9,8 @@ $configuration = array(
 		'user' => 'root',
 		'password' => ''
 	),
-	'defaultQuery' => 'index',
+	'defaultQuery' => 'beziehung',
 	'aliasQueries' => array(
-		'index' => 'Coaching/query/beziehung'
+		'(beziehung|abnehmen)' => 'Coaching/query/$1'
 	)
 );
