@@ -1,6 +1,6 @@
 <?php
 
-class AuthenticationController extends Controller {
+class AuthenticationController extends UserInteractionController {
 	public function index() {
 		$this->updateUser();
 		
