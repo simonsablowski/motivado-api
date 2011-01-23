@@ -12,7 +12,7 @@ class TemporaryUser extends User {
 	}
 	
 	public function __construct() {
-		parent::__construct();
+		parent::__construct(func_num_args() == 1 && is_array($argument = func_get_arg(0)) ? $argument : func_get_args());
 		
 		$this->setTemporary('yes');
 	}

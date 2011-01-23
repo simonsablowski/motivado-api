@@ -2,9 +2,7 @@
 
 class AuthenticationController extends Controller {
 	public function index() {
-		if ($User = $this->getSession()->getData('User')) {
-			$this->setUser($User);
-		}
+		$this->updateUser();
 		
 		$this->displayView('Authentication.index.xml', array(
 			'User' => $this->getUser()
@@ -21,7 +19,6 @@ class AuthenticationController extends Controller {
 	
 	public function signOut() {
 		$this->getSession()->setData('User', NULL);
-		$this->setTemporaryUser();
 		
 		$this->index();
 	}

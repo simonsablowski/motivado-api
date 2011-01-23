@@ -7,12 +7,15 @@ class User extends Model {
 		'password',
 		'firstName',
 		'lastName',
+		'temporary',
 		'status',
 		'created',
 		'modified'
 	);
-	protected $requiredFields = array(
-		'firstName',
-		'lastName'
-	);
+	
+	public function __construct() {
+		parent::__construct(func_num_args() == 1 && is_array($argument = func_get_arg(0)) ? $argument : func_get_args());
+		
+		$this->setTemporary('no');
+	}
 }
