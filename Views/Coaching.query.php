@@ -5,7 +5,7 @@
 	<description><? echo $Coaching->getDescription(); ?></description>
 	<objects>
 <? foreach ($Objects as $Object): ?>
-	<? include 'Object.xml'; ?>
+	<? include 'Object.php'; ?>
 <? endforeach; ?>
 	</objects>
 </objectsequence>

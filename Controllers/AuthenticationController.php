@@ -4,7 +4,7 @@ class AuthenticationController extends UserInteractionController {
 	public function index() {
 		$this->updateUser();
 		
-		$this->displayView('Authentication.index.xml', array(
+		$this->displayView('Authentication.index.php', array(
 			'User' => $this->getUser()
 		));
 	}

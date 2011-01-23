@@ -24,7 +24,7 @@ class CoachingController extends UserInteractionController {
 			$Object = $Object->getNextObject($this->getUser()->getId());
 		}
 		
-		$this->displayView('Coaching.query.xml', array(
+		$this->displayView('Coaching.query.php', array(
 			'Coaching' => $Coaching,
 			'Objects' => $Objects
 		));
