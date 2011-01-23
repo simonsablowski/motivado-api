@@ -6,7 +6,7 @@ class Object extends Model {
 		'CoachingId',
 		'type',
 		'title',
-		//'data',
+		// 'data',
 		'status',
 		'created',
 		'modified'
