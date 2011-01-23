@@ -11,8 +11,11 @@ class Request extends Application {
 	}
 	
 	protected function getAlias($query) {
-		$aliasQueries = $this->getConfiguration('aliasQueries');
-		return isset($aliasQueries[$query]) ? $aliasQueries[$query] : $query;
+		foreach ($this->getConfiguration('aliasQueries') as $pattern => $replacement) {
+			$alias = preg_replace(sprintf('/^%s$/i', $pattern), $replacement, $query, -1, $replaced);
+			if ($replaced) return $alias;
+		}
+		return $query;
 	}
 	
 	protected function resolveQuery() {
