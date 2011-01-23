@@ -28,92 +28,46 @@ class Object extends Model {
 	protected $Coaching = NULL;
 	protected $NextObject = NULL;
 	protected $NextObjects = NULL;
-	protected $Video = NULL;
+	protected $condition = NULL;
 	
-	protected function loadNextObjects($UserId = NULL, $condition = array()) {
+	protected function loadNextObjects($condition = array()) {
 		$this->setNextObjects(ObjectSequence::findNextObjects($this, $condition));
 	}
 	
-	public function getNextObjects($UserId = NULL, $condition = array()) {
-		if (is_null($this->NextObjects)) $this->loadNextObjects($UserId, $condition);
+	public function getNextObjects($condition = array()) {
+		if (is_null($this->NextObjects)) $this->loadNextObjects($condition);
 		return $this->NextObjects;
 	}
 	
-	protected function loadNextObject($UserId = NULL, $condition = array()) {
-		$NextObjects = $this->getNextObjects($UserId, $condition);
+	protected function loadNextObject($User, $condition = array()) {
+		$NextObjects = $this->getNextObjects($condition);
 		
 		if (count($NextObjects) == 1) {
 			$this->setNextObject(pos($NextObjects));
-		}/* else if (!is_null($UserId)) {
-			$this->loadNextObjectSuitableToCharacterTraits($UserId);
-		}*/
+		} else {
+			$this->loadSuitableNextObject($User);
+		}
 	}
 	
-	/*protected function loadNextObjectSuitableToCharacterTraits($UserId) {
-		$User = User::find($UserId, array('status' => NULL));
-		$NextObjects = $this->getNextObjects($UserId);
-		$IndependentObjects = array();
+	protected function loadSuitableNextObject($User) {
+		$UnconditionalObjects = array();
 		
-		foreach ($NextObjects as $NextObject) {
-			$ObjectCharacterTraitDependencies = ObjectCharacterTraitDependency::findAll(array(
-				'ObjectId' => $NextObject->getId()
-			));
-			
-			if (!$ObjectCharacterTraitDependencies) {
-				if ($this->isIndependent($NextObject)) {
-					$IndependentObjects[] = $NextObject;
-				}
-				continue;
+		foreach ($this->getNextObjects() as $NextObject) {
+			if (!$NextObject->hasCondition()) {
+				$UnconditionalObjects[] = $NextObject;
 			}
 			
-			$suitableCharacterTraits = array();
-			foreach ($ObjectCharacterTraitDependencies as $ObjectCharacterTraitDependency) {
-				$cid = $ObjectCharacterTraitDependency->getCharacterTraitId();
-				
-				if (!$User->hasCharacterTrait($cid)) {
-					continue 2;
-				}
-				
-				$value = $ObjectCharacterTraitDependency->getValue();
-				$suitableCharacterTraits[$cid] = $value;
-			}
-			
-			if ($suitableCharacterTraits && $User->hasSuitableCharacterTraits($suitableCharacterTraits)) {
+			if ($User->isSuitableForObject($NextObject)) {
 				$this->setNextObject($NextObject);
 				return;
 			}
 		}
 		
-		$this->setNextObject($IndependentObjects ? pos($IndependentObjects) : NULL);
+		$this->setNextObject($UnconditionalObjects ? pos($UnconditionalObjects) : NULL);
 	}
 	
-	protected function isIndependent($Ancestor = NULL) {
-		try {
-			ObjectCharacterTraitDependency::findFirst(array(
-				'ObjectId' => $this->getId()
-			));
-			return FALSE;
-		} catch (Error $Error) {
-			return TRUE;
-		}
-	}
-	
-	protected function loadIndependentNextObject($UserId) {
-		$NextObjects = $this->getNextObjects($UserId);
-		if (!$NextObjects) {
-			return;
-		}
-		
-		foreach ($NextObjects as $NextObject) {
-			if ($NextObject->isIndependent($this)) {
-				$this->setNextObject($NextObject);
-				break;
-			}
-		}
-	}*/
-	
-	public function getNextObject($UserId = NULL, $condition = array()) {
-		if (is_null($this->NextObject)) $this->loadNextObject($UserId, $condition);
+	public function getNextObject($User, $condition = array()) {
+		if (is_null($this->NextObject)) $this->loadNextObject($User, $condition);
 		return $this->NextObject;
 	}
 }
