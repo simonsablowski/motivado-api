@@ -6,11 +6,13 @@ require_once 'configuration.php';
 require_once 'Application.php';
 
 function __autoload($className) {
-	if (($namePart = strstr($className, 'Controller', TRUE)) !== FALSE && file_exists($fileName = 'Controllers/' . $namePart . 'Controller.php')) {
+	$filePath = dirname(__FILE__) . '/';
+	
+	if (($namePart = strstr($className, 'Controller', TRUE)) !== FALSE && file_exists($filePath . ($fileName = 'Controllers/' . $namePart . 'Controller.php'))) {
+		include_once $filePath . $fileName;
+	} else if (file_exists($filePath . ($fileName = 'Models/' . $className . '.php'))) {
 		include_once $fileName;
-	} else if (file_exists($fileName = 'Models/' . $className . '.php')) {
-		include_once $fileName;
-	} else if (file_exists($fileName = 'Libraries/' . $className . '.php')) {
+	} else if (file_exists($filePath . ($fileName = 'Libraries/' . $className . '.php'))) {
 		include_once $fileName;
 	}
 }
