@@ -10,6 +10,7 @@ class ObjectSequence extends Model {
 		'CoachingId',
 		'LeftId',
 		'RightId',
+		'condition',
 		'status',
 		'created',
 		'modified'
