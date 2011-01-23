@@ -16,7 +16,7 @@ class ErrorHandler extends Application {
 				// break;
 			case 'Fatal':
 				$this->getOutputBuffer()->clean();
-				$this->displayView('Error.xml', array(
+				$this->displayView('Error.php', array(
 					'Error' => $Error
 				));
 				break;
