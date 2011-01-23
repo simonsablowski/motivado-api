@@ -10,9 +10,9 @@ abstract class Controller extends Application {
 	
 	protected function updateUser() {
 		if ($User = $this->getSession()->getData('User')) {
-			$this->setUser($User);
+			return $this->setUser($User);
 		} else {
-			$this->setTemporaryUser();
+			return $this->setTemporaryUser();
 		}
 	}
 	
