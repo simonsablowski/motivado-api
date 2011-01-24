@@ -12,6 +12,13 @@ class User extends Model {
 		'created',
 		'modified'
 	);
+	protected $hiddenFields = array(
+		'id',
+		'password',
+		'status',
+		'created',
+		'modified'
+	);
 	
 	public function __construct() {
 		parent::__construct(func_num_args() == 1 && is_array($argument = func_get_arg(0)) ? $argument : func_get_args());
