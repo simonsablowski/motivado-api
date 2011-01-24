@@ -12,5 +12,6 @@ $configuration = array(
 	'defaultQuery' => 'beziehung',
 	'aliasQueries' => array(
 		'(beziehung|abnehmen)' => 'Coaching/query/$1'
-	)
+	),
+	'debugMode' => TRUE
 );

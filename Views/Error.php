@@ -6,7 +6,13 @@
 		<type><? echo $Error->getType(); ?></type>
 		<code><? echo $Error->getCode(); ?></code>
 		<message><? echo $Error->getMessage(); ?></message>
-<?/*		<details><? print_r($Error->getDetails()); ?></details>*/?>
-<?/*		<trace><? echo $Error->getTraceAsString(); ?></trace>*/?>
+<? if ($this->getApplication()->getConfiguration('debugMode')): ?>
+		<details>
+<? print_r($Error->getDetails()); ?>
+		</details>
+		<trace>
+<? print_r($Error->getTrace()); ?>
+		</trace>
+<? endif; ?>
 	</error>
 </response>
