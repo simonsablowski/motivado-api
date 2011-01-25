@@ -18,7 +18,7 @@ $configuration['aliasQueries'] = array(
 	'(beziehung|abnehmen)' => 'Coaching/query/$1',
 	'signIn' => 'Authentication/signIn/simon@notmybiz.com/test',
 	'signOut' => 'Authentication/signOut',
-	'(*)' => '$1/index'
+	'([^\/]+)' => '$1/index'
 );
 
 $configuration['debugMode'] = TRUE;
