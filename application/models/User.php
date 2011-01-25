@@ -25,4 +25,9 @@ class User extends Model {
 		
 		$this->setTemporary('no');
 	}
+	
+	//TODO
+	public function isSuitableForObject($Object) {
+		return FALSE;
+	}
 }
