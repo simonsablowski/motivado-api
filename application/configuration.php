@@ -15,10 +15,10 @@ $configuration['Database'] = array(
 $configuration['defaultQuery'] = 'beziehung';
 
 $configuration['aliasQueries'] = array(
-	'(beziehung|abnehmen)' => 'Coaching/query/$1',
+	'(Coaching/)?(beziehung|abnehmen)' => 'Coaching/query/$2',
 	'signIn' => 'Authentication/signIn/simon@notmybiz.com/test',
 	'signOut' => 'Authentication/signOut',
-	'([^\/]+)' => '$1/index'
+	'([^/]+)' => '$1/index'
 );
 
 $configuration['debugMode'] = TRUE;
