@@ -11,7 +11,10 @@ $configuration = array(
 	),
 	'defaultQuery' => 'beziehung',
 	'aliasQueries' => array(
-		'(beziehung|abnehmen)' => 'Coaching/query/$1'
+		'(beziehung|abnehmen)' => 'Coaching/query/$1',
+		'signIn' => 'Authentication/signIn/simon@notmybiz.com/test',
+		'signOut' => 'Authentication/signOut'
 	),
 	'debugMode' => TRUE
+	// 'debugMode' => FALSE
 );
