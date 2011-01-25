@@ -24,21 +24,21 @@ class Coaching extends Object {
 	}
 	
 	protected function loadObjects() {
-		$ObjectSequenceObjects = ObjectSequence::findAll(array(
+		$ObjectTransitions = ObjectTransition::findAll(array(
 			'CoachingId' => $this->getReferenceId()
 		));
 		$Objects = array();
-		foreach ($ObjectSequenceObjects as $ObjectSequenceObject) {
-			$Objects[] = Object::find($ObjectSequenceObject->getRightId());
+		foreach ($ObjectTransitions as $ObjectTransition) {
+			$Objects[] = Object::find($ObjectTransition->getRightId());
 		}
 		$this->setObjects($Objects);
 	}
 		
 	protected function loadFirstObject() {
-		$ObjectSequence = ObjectSequence::findFirst(array(
+		$ObjectTransition = ObjectTransition::findFirst(array(
 			'CoachingId' => $this->getId(),
 			'LeftId' => 0
 		));
-		$this->setFirstObject(Object::find($ObjectSequence->getRightId()));
+		$this->setFirstObject(Object::find($ObjectTransition->getRightId()));
 	}
 }

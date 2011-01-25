@@ -1,6 +1,6 @@
 <?php
 
-class ObjectSequence extends Model {
+class ObjectTransition extends Model {
 	protected static $primaryKey = array(
 		'CoachingId',
 		'LeftId',
@@ -23,14 +23,14 @@ class ObjectSequence extends Model {
 	protected $Coaching = NULL;
 	
 	public static function findNextObjects($Object, $data = array()) {
-		$ObjectSequences = self::findAll(array_merge(array(
+		$ObjectTransitions = self::findAll(array_merge(array(
 			'CoachingId' => $Object->getCoachingId(),
 			'LeftId' => $Object->getId()
 		), $data));
 		
 		$NextObjects = array();
-		foreach ($ObjectSequences as $ObjectSequence) {
-			$NextObjects[] = Object::find($ObjectSequence->getRightId());
+		foreach ($ObjectTransitions as $ObjectTransition) {
+			$NextObjects[] = Object::find($ObjectTransition->getRightId());
 		}
 		return $NextObjects;
 	}

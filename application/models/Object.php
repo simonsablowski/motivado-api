@@ -31,7 +31,7 @@ class Object extends Model {
 	protected $condition = NULL;
 	
 	protected function loadNextObjects($condition = array()) {
-		$this->setNextObjects(ObjectSequence::findNextObjects($this, $condition));
+		$this->setNextObjects(ObjectTransition::findNextObjects($this, $condition));
 	}
 	
 	public function getNextObjects($condition = array()) {
