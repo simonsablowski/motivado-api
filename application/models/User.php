@@ -27,7 +27,7 @@ class User extends Model {
 	}
 	
 	//TODO
-	public function isSuitableForObject($Object) {
+	public function isSuitableForObject(Object $Object) {
 		return FALSE;
 	}
 }
