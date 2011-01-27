@@ -22,7 +22,7 @@ class ObjectTransition extends Model {
 	
 	protected $Coaching = NULL;
 	
-	public static function findNextObjects($Object, $data = array()) {
+	public static function findNextObjects(Object $Object, $data = array()) {
 		$ObjectTransitions = self::findAll(array_merge(array(
 			'CoachingId' => $Object->getCoachingId(),
 			'LeftId' => $Object->getId()

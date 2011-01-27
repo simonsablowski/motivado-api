@@ -49,7 +49,7 @@ class Object extends Model {
 		}
 	}
 	
-	protected function loadSuitableNextObject($User) {
+	protected function loadSuitableNextObject(User $User) {
 		$UnconditionalObjects = array();
 		
 		foreach ($this->getNextObjects() as $NextObject) {
@@ -66,7 +66,7 @@ class Object extends Model {
 		$this->setNextObject($UnconditionalObjects ? pos($UnconditionalObjects) : NULL);
 	}
 	
-	public function getNextObject($User, $condition = array()) {
+	public function getNextObject(User $User, $condition = array()) {
 		if (is_null($this->NextObject)) $this->loadNextObject($User, $condition);
 		return $this->NextObject;
 	}

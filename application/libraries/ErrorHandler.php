@@ -5,7 +5,7 @@ class ErrorHandler extends Application {
 		
 	}
 	
-	public function handle($Error) {
+	public function handle(Error $Error) {
 		switch ($Error->getType()) {
 			default:
 			case 'Warning':
