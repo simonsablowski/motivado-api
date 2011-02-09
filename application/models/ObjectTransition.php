@@ -30,7 +30,11 @@ class ObjectTransition extends Model {
 		
 		$NextObjects = array();
 		foreach ($ObjectTransitions as $ObjectTransition) {
-			$NextObjects[] = Object::find($ObjectTransition->getRightId());
+			try {
+				$NextObjects[] = Object::find($ObjectTransition->getRightId());
+			} catch (Error $Error) {
+				continue;
+			}
 		}
 		return $NextObjects;
 	}
