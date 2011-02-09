@@ -29,7 +29,11 @@ class Coaching extends Object {
 		));
 		$Objects = array();
 		foreach ($ObjectTransitions as $ObjectTransition) {
-			$Objects[] = Object::find($ObjectTransition->getRightId());
+			try {
+				$Objects[] = Object::find($ObjectTransition->getRightId());
+			} catch (Error $Error) {
+				continue;
+			}
 		}
 		$this->setObjects($Objects);
 	}
