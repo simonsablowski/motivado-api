@@ -20,6 +20,9 @@ class User extends Model {
 		'modified'
 	);
 	
+	protected $Coachings = NULL;
+	protected $Interactions = NULL;
+	
 	public function __construct() {
 		parent::__construct(func_num_args() == 1 && is_array($argument = func_get_arg(0)) ? $argument : func_get_args());
 		
@@ -29,5 +32,26 @@ class User extends Model {
 	//TODO
 	public function isSuitableForObject(Object $Object) {
 		return FALSE;
+	}
+	
+	//TODO
+	public function getCurrentCoachingObject($Coaching) {
+		return NULL;
+	}
+	
+	public function loadCoachings() {
+		$this->Coachings = array();
+		$UsersCoachings = UsersCoaching::findAll(array(
+			'UserId' => $this->getId()
+		));
+		foreach ($UsersCoachings as $UsersCoaching) {
+			$this->Coachings[] = $UsersCoaching->getCoaching();
+		}
+	}
+	
+	public function loadInteractions() {
+		$this->Interactions = UsersInteraction::findAll(array(
+			'UserId' => $this->getId()
+		));
 	}
 }

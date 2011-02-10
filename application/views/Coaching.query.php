@@ -5,7 +5,7 @@
 	<description><? echo $Coaching->getDescription(); ?></description>
 	<objects>
 <? foreach ($Objects as $Object): ?>
-	<? include 'Object.php'; ?>
+	<? include 'components/Object.php'; ?>
 <? endforeach; ?>
 	</objects>
 </objectsequence>

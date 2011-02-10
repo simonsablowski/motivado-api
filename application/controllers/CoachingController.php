@@ -1,11 +1,19 @@
 <?php
 
 class CoachingController extends UserInteractionController {
+	protected function getStartObject(Coaching $Coaching) {
+		if ($StartObject = $this->getUser()->getCurrentCoachingObject($Coaching)) {
+			return $StartObject;
+		} else {
+			return $Coaching->getFirstObject();
+		}
+	}
+	
 	public function query($key) {
 		$this->updateUser();
 		
 		$Coaching = Coaching::findByKey($key);
-		$Object = $Coaching->getFirstObject();
+		$Object = $this->getStartObject($Coaching);
 		
 		if ($Object->getType() == 'Coaching') {
 			$Coaching = $Object;
