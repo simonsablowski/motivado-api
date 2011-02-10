@@ -4,6 +4,7 @@ class Coaching extends Object {
 	protected $fields = array(
 		'id',
 		'OriginalId',
+		'key',
 		'language',
 		'title',
 		'description',
