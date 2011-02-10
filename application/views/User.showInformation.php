@@ -2,15 +2,15 @@
 <? echo '<?xml-stylesheet type="text/xsl" href="' . $this->getApplication()->getConfiguration('baseDirectory') . 'xsl/User.showInformation.xsl"?>'; ?>
 
 <usersinformation>
-	<? include 'User.php'; ?>
+	<? include 'components/User.php'; ?>
 	<coachings>
 <? foreach ($User->getCoachings() as $Coaching): ?>
-	<? include 'Coaching.php'; ?>
+	<? include 'components/Coaching.php'; ?>
 <? endforeach; ?>
 	</coachings>
 	<interactions>
 <? foreach ($User->getInteractions() as $UsersInteraction): ?>
-	<? include 'UsersInteraction.php'; ?>
+	<? include 'components/UsersInteraction.php'; ?>
 <? endforeach; ?>
 	</interactions>
 </usersinformation>
