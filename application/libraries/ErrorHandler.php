@@ -13,7 +13,7 @@ class ErrorHandler extends Application {
 				// break;
 			case 'Fatal':
 				$this->getOutputBuffer()->clean();
-				$this->displayView('Error.php', array(
+				$this->displayView('Error.show.php', array(
 					'Error' => $Error
 				));
 				break;
