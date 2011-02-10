@@ -1,15 +1,16 @@
 <? echo '<?xml version="1.0" encoding="utf-8"?>'; ?>
+<? echo '<?xml-stylesheet type="text/xsl" href="' . $this->getApplication()->getConfiguration('baseDirectory') . 'xsl/User.showInformation.xsl"?>'; ?>
 
-<userinformation>
+<usersinformation>
 	<? include 'User.php'; ?>
 	<coachings>
 <? foreach ($User->getCoachings() as $Coaching): ?>
 	<? include 'Coaching.php'; ?>
 <? endforeach; ?>
 	</coachings>
-	<interaction>
-<? foreach ($User->getInteraction() as $UserInteraction): ?>
-	<? include 'UserInteraction.php'; ?>
+	<interactions>
+<? foreach ($User->getInteractions() as $UsersInteraction): ?>
+	<? include 'UsersInteraction.php'; ?>
 <? endforeach; ?>
-	</interaction>
-</userinformation>
+	</interactions>
+</usersinformation>
