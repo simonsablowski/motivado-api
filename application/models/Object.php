@@ -6,7 +6,8 @@ class Object extends Model {
 		'CoachingId',
 		'type',
 		'title',
-		// 'data',
+		//TODO: find better name for field
+		//'data',
 		'status',
 		'created',
 		'modified'
