@@ -29,16 +29,6 @@ class User extends Model {
 		$this->setTemporary('no');
 	}
 	
-	//TODO
-	public function isSuitableForObject(Object $Object) {
-		return FALSE;
-	}
-	
-	//TODO
-	public function getCurrentCoachingObject($Coaching) {
-		return NULL;
-	}
-	
 	public function loadCoachings() {
 		$this->Coachings = array();
 		$UsersCoachings = UsersCoaching::findAll(array(
