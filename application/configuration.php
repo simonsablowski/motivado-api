@@ -22,4 +22,4 @@ $configuration['aliasQueries'] = array(
 );
 
 $configuration['debugMode'] = TRUE;
-// $configuration['debugMode'] = FALSE;
+//$configuration['debugMode'] = FALSE;

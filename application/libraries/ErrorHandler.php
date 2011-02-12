@@ -9,8 +9,8 @@ class ErrorHandler extends Application {
 		switch ($Error->getType()) {
 			default:
 			case 'Warning':
-				// $this->getSession()->setData('Error', $Error);
-				// break;
+				//$this->getSession()->setData('Error', $Error);
+				//break;
 			case 'Fatal':
 				$this->getOutputBuffer()->clean();
 				$this->displayView('Error.show.php', array(
