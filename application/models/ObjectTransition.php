@@ -21,21 +21,14 @@ class ObjectTransition extends Model {
 	);
 	
 	protected $Coaching = NULL;
+	protected $Left = NULL;
+	protected $Right = NULL;
 	
-	public static function findNextObjects(Object $Object, $data = array()) {
-		$ObjectTransitions = self::findAll(array_merge(array(
-			'CoachingId' => $Object->getCoachingId(),
-			'LeftId' => $Object->getId()
-		), $data));
-		
-		$NextObjects = array();
-		foreach ($ObjectTransitions as $ObjectTransition) {
-			try {
-				$NextObjects[] = Object::find($ObjectTransition->getRightId());
-			} catch (Error $Error) {
-				continue;
-			}
-		}
-		return $NextObjects;
+	protected function loadLeft() {
+		return $this->setLeft(Object::find($this->getLeftId()));
+	}
+	
+	protected function loadRight() {
+		return $this->setRight(Object::find($this->getRightId()));
 	}
 }
