@@ -27,7 +27,7 @@ class CoachingController extends UserInteractionController {
 				$NextObject = $ObjectTransition->getRight();
 				$NextObjects[] = $NextObject;
 				
-				if ($this->isSuitable($NextObject)) {
+				if ($this->isSuitableObject($NextObject)) {
 					return $NextObject;
 				}
 			} catch (Error $Error) {
@@ -38,7 +38,7 @@ class CoachingController extends UserInteractionController {
 		return $NextObjects ? pos($NextObjects) : NULL;
 	}
 	
-	public function query($key, $useCoachingHistory = TRUE) {
+	public function query($key, $useCoachingHistory = FALSE) {
 		$this->updateUser();
 		$this->setCoachingHistory(new CoachingHistory((bool)$useCoachingHistory && $this->isSignedIn()));
 		$this->getCoachingHistory()->setSession($this->getSession());
