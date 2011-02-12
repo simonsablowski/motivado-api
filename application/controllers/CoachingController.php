@@ -1,8 +1,14 @@
 <?php
 
 class CoachingController extends UserInteractionController {
+	protected $usingCoachingHistory = TRUE;
+	
+	protected function useCoachingHistory() {
+		return $this->isUsingCoachingHistory() && $this->isSignedIn();
+	}
+	
 	protected function getCoachingHistory($Coaching = NULL) {
-		if (!$this->isSignedIn()) return NULL;
+		if (!$this->useCoachingHistory()) return NULL;
 		
 		$CoachingHistory = $this->getSession()->getData('CoachingHistory');
 		if (is_null($Coaching)) {
@@ -15,14 +21,16 @@ class CoachingController extends UserInteractionController {
 	}
 	
 	protected function extendCoachingHistory(Coaching $Coaching, Object $Object) {
-		if (!$this->isSignedIn()) return NULL;
+		if (!$this->useCoachingHistory()) return NULL;
 		
 		$CoachingHistory = $this->getCoachingHistory();
 		$CoachingHistory[$Coaching->getId()][] = $Object;
 		return $this->getSession()->setData('CoachingHistory', $CoachingHistory);
 	}
 	
-	protected function cleanCoachingHistory() {
+	protected function clearCoachingHistory() {
+		if (!$this->useCoachingHistory()) return NULL;
+		
 		return $this->getSession()->setData('CoachingHistory', NULL);
 	}
 	
@@ -66,8 +74,9 @@ class CoachingController extends UserInteractionController {
 		return $NextObjects ? pos($NextObjects) : NULL;
 	}
 	
-	public function query($key) {
+	public function query($key, $useCoachingHistory = TRUE) {
 		$this->updateUser();
+		$this->setUsingCoachingHistory((bool)$useCoachingHistory);
 		
 		$Coaching = Coaching::findByKey($key);
 		$Object = $this->getStartObject($Coaching);
