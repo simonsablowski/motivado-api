@@ -4,7 +4,6 @@
 	<status>Failure</status>
 	<error>
 		<type><? echo $Error->getType(); ?></type>
-		<code><? echo $Error->getCode(); ?></code>
 		<message><? echo $Error->getMessage(); ?></message>
 <? if ($this->getApplication()->getConfiguration('debugMode')): ?>
 		<details>

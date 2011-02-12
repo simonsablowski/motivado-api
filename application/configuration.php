@@ -15,7 +15,7 @@ $configuration['Database'] = array(
 $configuration['defaultQuery'] = 'beziehung';
 
 $configuration['aliasQueries'] = array(
-	'(Coaching/)?(beziehung|abnehmen)' => 'Coaching/query/$2',
+	'(Coaching/)?(beziehung|abnehmen)(/(1|0))?' => 'Coaching/query/$2$3',
 	'signIn' => 'Authentication/signIn/simon@notmybiz.com/test',
 	'signOut' => 'Authentication/signOut',
 	'([^/]+)' => '$1/index'
