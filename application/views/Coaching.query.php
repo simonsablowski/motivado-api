@@ -5,7 +5,7 @@
 	<description><? echo $Coaching->getDescription(); ?></description>
 	<objects>
 <? foreach ($Objects as $Object): ?>
-	<? include 'components/Object.php'; ?>
+	<? $this->displayView('components/Object.php', array('Object' => $Object)); ?>
 <? endforeach; ?>
 	</objects>
 </objectsequence>
