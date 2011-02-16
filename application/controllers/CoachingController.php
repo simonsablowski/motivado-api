@@ -10,8 +10,8 @@ class CoachingController extends UserInteractionController {
 		return $Coaching->getFirstObject();
 	}
 	
-	//TODO
-	protected function isSuitableObject(Object $Object) {
+	//TODO: implement logic after a technical concept for conditions was developed
+	protected function isSuitableObject(Object $Object, $condition) {
 		return FALSE;
 	}
 	
@@ -27,7 +27,8 @@ class CoachingController extends UserInteractionController {
 				$NextObject = $ObjectTransition->getRight();
 				$NextObjects[] = $NextObject;
 				
-				if ($this->isSuitableObject($NextObject)) {
+				//TODO: fit call to updated method
+				if ($this->isSuitableObject($NextObject, $ObjectTransition->getCondition())) {
 					return $NextObject;
 				}
 			} catch (Error $Error) {
