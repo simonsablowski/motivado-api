@@ -17,6 +17,7 @@ class UsersCoaching extends Model {
 		'CoachingId'
 	);
 	
+	//TODO: Coaching is not loaded by $UsersCoaching->getCoaching()
 	protected $User = NULL;
 	protected $Coaching = NULL;
 }
