@@ -11,8 +11,8 @@ class CoachingController extends Controller {
 	}
 	
 	//TODO: implement logic after a technical concept for conditions was developed
-	protected function isSuitableObject(Object $Object, $condition) {
-		return FALSE;
+	protected function meetsCondition($condition) {
+		return TRUE;
 	}
 	
 	protected function getNextObject(Object $Object) {
@@ -28,7 +28,7 @@ class CoachingController extends Controller {
 				
 				//TODO: fit call to updated method
 				if ($condition = $ObjectTransition->getCondition()) {
-					if ($this->isSuitableObject($NextObject, $condition)) {
+					if ($this->meetsCondition($condition)) {
 						return $NextObject;
 					}	
 				} else {
@@ -50,7 +50,7 @@ class CoachingController extends Controller {
 		
 		$Objects = array();
 		while (!is_null($Object)) {
-			if ($Object->getType() != 'SignUp' || $this->restrictAccess()) {
+			if ($Object->getType() != 'SignUp' || $this->restrictAccess($CoachingKey)) {
 				$Objects[] = $Object;
 				
 				if ($Object->getType() == 'SignUp' || $Object->getType() == 'Interrupt' || $Object->getType() == 'Coaching') {
@@ -68,7 +68,7 @@ class CoachingController extends Controller {
 	}
 	
 	//TODO: implement gateway for evaluating whether the user is paying customer for the requested product
-	protected function restrictAccess() {
+	protected function restrictAccess($CoachingKey) {
 		return FALSE;
 	}
 	
