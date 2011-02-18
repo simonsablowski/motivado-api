@@ -12,13 +12,10 @@ $configuration['Database'] = array(
 	'password' => ''
 );
 
-$configuration['defaultQuery'] = 'beziehung';
+$configuration['defaultQuery'] = 'beziehung/1';
 
 $configuration['aliasQueries'] = array(
-	'(Coaching/)?(beziehung|abnehmen)(/(1|0))?' => 'Coaching/query/$2$3',
-	'signIn' => 'Authentication/signIn/simon@notmybiz.com/test',
-	'signOut' => 'Authentication/signOut',
-	'([^/]+)' => '$1/index'
+	'(Coaching/)?(beziehung|abnehmen)(/(1|0))' => 'Coaching/query/$2$3'
 );
 
 $configuration['debugMode'] = TRUE;
