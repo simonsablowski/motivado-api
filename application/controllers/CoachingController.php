@@ -1,6 +1,6 @@
 <?php
 
-class CoachingController extends UserInteractionController {
+class CoachingController extends Controller {
 	protected $CoachingHistory = NULL;
 	
 	protected function getStartObject(Coaching $Coaching) {
@@ -25,11 +25,14 @@ class CoachingController extends UserInteractionController {
 		foreach ($ObjectTransitions as $ObjectTransition) {
 			try {
 				$NextObject = $ObjectTransition->getRight();
-				$NextObjects[] = $NextObject;
 				
 				//TODO: fit call to updated method
-				if ($this->isSuitableObject($NextObject, $ObjectTransition->getCondition())) {
-					return $NextObject;
+				if ($condition = $ObjectTransition->getCondition()) {
+					if ($this->isSuitableObject($NextObject, $condition)) {
+						return $NextObject;
+					}	
+				} else {
+					$NextObjects[] = $NextObject;
 				}
 			} catch (Error $Error) {
 				continue;
@@ -39,17 +42,15 @@ class CoachingController extends UserInteractionController {
 		return $NextObjects ? pos($NextObjects) : NULL;
 	}
 	
-	public function query($key, $useCoachingHistory = FALSE) {
-		$this->updateUser();
-		$this->setCoachingHistory(new CoachingHistory((bool)$useCoachingHistory && $this->isSignedIn()));
-		$this->getCoachingHistory()->setSession($this->getSession());
+	public function query($CoachingKey) {
+		$this->initializeCoachingHistory();
 		
-		$Coaching = Coaching::findByKey($key);
+		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching);
 		
 		$Objects = array();
 		while (!is_null($Object)) {
-			if ($Object->getType() != 'SignUp' || !$this->isSignedIn()) {
+			if ($Object->getType() != 'SignUp' || $this->restrictAccess()) {
 				$Objects[] = $Object;
 				
 				if ($Object->getType() == 'SignUp' || $Object->getType() == 'Interrupt' || $Object->getType() == 'Coaching') {
@@ -57,14 +58,26 @@ class CoachingController extends UserInteractionController {
 				}
 			}
 			
-			if ($Object = $this->getNextObject($Object)) {
-				$this->getCoachingHistory()->extend($Coaching, $Object);
-			}
+			$Object = $this->getNextObject($Object);
 		}
 		
 		$this->displayView('Coaching.query.php', array(
 			'Coaching' => $Coaching,
 			'Objects' => $Objects
 		));
+	}
+	
+	//TODO: implement gateway for evaluating whether the user is paying customer for the requested product
+	protected function restrictAccess() {
+		return FALSE;
+	}
+	
+	protected function initializeCoachingHistory() {
+		$this->setCoachingHistory(new CoachingHistory);
+		$this->getCoachingHistory()->setSession($this->getSession());
+	}
+	
+	public function extendCoachingHistory($CoachingKey, $ObjectId) {
+		return $this->getCoachingHistory()->extend(Coaching::findByKey($CoachingKey), Object::find($ObjectId));
 	}
 }
