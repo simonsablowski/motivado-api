@@ -15,7 +15,7 @@ $configuration['Database'] = array(
 $configuration['defaultQuery'] = 'beziehung';
 
 $configuration['aliasQueries'] = array(
-	'(Coaching/)?(beziehung|abnehmen)' => 'Coaching/query/$2$3'
+	'(Coaching/)?(beziehung|abnehmen)' => 'Coaching/query/$2'
 );
 
 $configuration['debugMode'] = TRUE;
