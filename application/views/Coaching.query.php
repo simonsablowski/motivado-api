@@ -5,15 +5,15 @@
 	<description><? echo $Coaching->getDescription(); ?></description>
 	<objects>
 <? foreach ($Objects as $Object): ?>
-	<object id="<? echo $Object->getId(); ?>" type="<? echo $Object->getType(); ?>">
-	<? foreach ($Object->getData() as $field => $value): ?>
+		<object id="<? echo $Object->getId(); ?>" type="<? echo $Object->getType(); ?>">
+<? foreach ($Object->getData() as $field => $value): ?>
 <? if ($field == 'properties'): ?>
 <? echo Json::convertToXml($value, strtolower($field), 3); ?>
 <? else: ?>
-		<<? echo strtolower($field); ?>><? echo Xml::cleanProperty($value); ?></<? echo strtolower($field); ?>>
+			<<? echo strtolower($field); ?>><? echo Xml::cleanProperty($value); ?></<? echo strtolower($field); ?>>
 <? endif; ?>
-	<? endforeach; ?>
-	</object>
+<? endforeach; ?>
+		</object>
 <? endforeach; ?>
 	</objects>
 </objectsequence>
