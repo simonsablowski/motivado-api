@@ -2,33 +2,29 @@
 
 error_reporting(E_ALL);
 
-$pathCore = dirname(__FILE__) . '/../../core/';
-$pathApplication = dirname(__FILE__) . '/../';
-
-require_once $pathCore . 'Application.php';
-require_once $pathApplication . 'configuration.php';
+require_once dirname(__FILE__) . '/../configuration.php';
 
 function __autoload($className) {
-	global $pathCore, $pathApplication;
+	global $configuration;
 	
-	if (!findClass($className, $pathApplication)) {
-		findClass($className, $pathCore);
+	foreach ($configuration['includeDirectories'] as $includeDirectory) {
+		if (findClass($className, $includeDirectory)) return;
 	}
 }
 
 function findClass($className, $filePath) {
 	if (($namePart = strstr($className, 'Controller', TRUE)) !== FALSE && file_exists($filePath . ($fileName = 'controllers/' . $namePart . 'Controller.php'))) {
-		include_once $filePath . $fileName;
-		return TRUE;
+		return include_once $filePath . $fileName;
 	} else if (file_exists($filePath . ($fileName = 'models/' . $className . '.php'))) {
-		include_once $filePath . $fileName;
-		return TRUE;
+		return include_once $filePath . $fileName;
 	} else if (file_exists($filePath . ($fileName = 'libraries/' . $className . '.php'))) {
-		include_once $filePath . $fileName;
-		return TRUE;
+		return include_once $filePath . $fileName;
+	} else if (file_exists($filePath . ($fileName = $className . '.php'))) {
+		return include_once $filePath . $fileName;
 	}
+	
 	return FALSE;
 }
 
-$Application = new Application($configuration);
+$Application = new Application($configuration, isset($_GET['localization']) ? $_GET['localization'] : NULL);
 $Application->run(isset($_GET['query']) ? $_GET['query'] : NULL);
