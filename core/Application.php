@@ -5,11 +5,12 @@ class Application {
 	protected $configuration = array();
 	protected $Reflection = NULL;
 	private $ErrorHandler = NULL;
-	private $Request = NULL;
+	protected $Request = NULL;
 	protected $OutputBuffer = NULL;
 	protected $Session = NULL;
 	private $Controller = NULL;
 	protected $Application = NULL;
+	protected $variables = array();
 	
 	protected static function resolveMethod($className, $method) {
 		preg_match_all('/(^|[A-Z]{1})([a-z]*)/', $method, $methodParts);
@@ -134,6 +135,7 @@ class Application {
 		
 		$this->setController($this->getInstance($name));
 		$this->getController()->setConfiguration($this->getConfiguration());
+		$this->getController()->setRequest($this->getRequest());
 		$this->getController()->setSession($this->getSession());
 	}
 	
@@ -153,8 +155,13 @@ class Application {
 		return !is_null($field) ? (isset($this->configuration[$field]) ? $this->configuration[$field] : NULL) : $this->configuration;
 	}
 	
+	protected function setVariables($variables) {
+		$this->variables = array_merge($this->variables, $variables);
+	}
+	
 	protected function displayView($view, $variables = array()) {
-		extract($variables);		
+		$this->setVariables($variables);		
+		extract($this->getVariables());		
 		include $this->getApplication()->getPath() . 'views/' . $view;
 	}
 }
