@@ -1,6 +1,6 @@
 RewriteEngine on
 
-RewriteBase /motivado/api/application/web
+RewriteBase /motivado/api/web
 
 RewriteRule ^$ index.php?query= [L,QSA]
 
