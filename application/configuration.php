@@ -12,10 +12,16 @@ $configuration['Database'] = array(
 	'password' => ''
 );
 
-$configuration['defaultQuery'] = 'coaching/beziehung';
+$configuration['Localization'] = array(
+	'language' => 'de_DE',
+	'locale' => 'de_DE'
+);
 
-$configuration['aliasQueries'] = array(
-	'(coaching)/(\w+)' => '$1/query/$2'
+$configuration['Request'] = array(
+	'defaultQuery' => 'coaching/beziehung',
+	'aliasQueries' => array(
+		'(coaching)/(\w+)' => '$1/query/$2'
+	)
 );
 
 $configuration['debugMode'] = TRUE;
