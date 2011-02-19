@@ -4,13 +4,6 @@ $configuration = array();
 
 $configuration['header'] = 'Content-Type: text/xml; charset=utf-8';
 
-$configuration['pathApplication'] = dirname(__FILE__) . '/';
-
-$configuration['includeDirectories'] = array(
-	$configuration['pathApplication'],
-	'D:/Webprojekte/nacho/core/'
-);
-
 $configuration['Database'] = array(
 	'type' => 'MySql',
 	'host' => 'localhost',
@@ -20,11 +13,8 @@ $configuration['Database'] = array(
 );
 
 $configuration['Localization'] = array(
-	'default' => 'de_DE',
-	'de_DE' => array(
-		'language' => 'de_DE',
-		'locale' => 'de_DE'
-	)
+	'language' => 'de_DE',
+	'locale' => 'de_DE'
 );
 
 $configuration['Request'] = array(

@@ -5,9 +5,10 @@ class Object extends Model {
 		'id',
 		'CoachingId',
 		'type',
+		'key',
+		'properties',
 		'title',
-		//TODO: find better name for field
-		//'data',
+		'description',
 		'status',
 		'created',
 		'modified'
@@ -15,7 +16,7 @@ class Object extends Model {
 	protected $requiredFields = array(
 		'CoachingId',
 		'type',
-		'title',
+		'key'
 	);
 	protected $hiddenFields = array(
 		'id',

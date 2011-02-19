@@ -3,7 +3,6 @@
 class Coaching extends Object {
 	protected $fields = array(
 		'id',
-		'OriginalId',
 		'key',
 		'language',
 		'title',
@@ -20,13 +19,9 @@ class Coaching extends Object {
 	protected $Objects = NULL;
 	protected $FirstObject = NULL;
 	
-	protected function getReferenceId() {
-		return $this->getOriginalId() ? $this->getOriginalId() : $this->getId();
-	}
-	
 	protected function loadObjects() {
 		$ObjectTransitions = ObjectTransition::findAll(array(
-			'CoachingId' => $this->getReferenceId()
+			'CoachingId' => $this->getId()
 		));
 		$Objects = array();
 		foreach ($ObjectTransitions as $ObjectTransition) {

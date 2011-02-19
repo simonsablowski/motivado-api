@@ -1,15 +1,11 @@
 <?php
 
 class CoachingHistory extends Application {
-	protected $use = TRUE;
-	
-	public function __construct($use = TRUE) {
-		$this->setUse($use);
+	public function __construct() {
+		
 	}
 	
 	public function getData($Coaching = NULL) {
-		if (!$this->getUse()) return NULL;
-		
 		$data = $this->getSession()->getData('CoachingHistory');
 		if (is_null($Coaching)) {
 			return $data;
@@ -21,16 +17,12 @@ class CoachingHistory extends Application {
 	}
 	
 	public function extend(Coaching $Coaching, Object $Object) {
-		if (!$this->getUse()) return NULL;
-		
 		$data = $this->getData();
 		$data[$Coaching->getId()][] = $Object;
 		return $this->getSession()->setData('CoachingHistory', $data);
 	}
 	
 	public function clear() {
-		if (!$this->getUse()) return NULL;
-		
 		return $this->getSession()->setData('CoachingHistory', NULL);
 	}
 	
