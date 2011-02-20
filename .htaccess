@@ -2,7 +2,7 @@ RewriteEngine on
 
 RewriteBase /motivado/api/web
 
-RewriteRule ^$ index.php?query= [L,QSA]
+RewriteRule ^$ index.php [L,QSA]
 
 RewriteCond $1 !^robots\.txt
 RewriteCond %{REQUEST_FILENAME} !-f
