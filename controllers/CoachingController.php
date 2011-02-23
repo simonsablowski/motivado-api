@@ -43,7 +43,7 @@ class CoachingController extends Controller {
 	}
 	
 	public function query($CoachingKey) {
-		$this->initializeCoachingHistory();
+		$this->setupCoachingHistory();
 		
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching);
@@ -72,7 +72,7 @@ class CoachingController extends Controller {
 		return FALSE;
 	}
 	
-	protected function initializeCoachingHistory() {
+	protected function setupCoachingHistory() {
 		$this->setCoachingHistory(new CoachingHistory);
 		$this->getCoachingHistory()->setSession($this->getSession());
 	}
