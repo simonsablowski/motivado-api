@@ -1,6 +1,9 @@
 <?php
 
 class Coaching extends Object {
+	protected static $defaultSorting = array(
+		'title' => 'ascending'
+	);
 	protected $fields = array(
 		'id',
 		'key',

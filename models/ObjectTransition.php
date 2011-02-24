@@ -6,6 +6,7 @@ class ObjectTransition extends Model {
 		'LeftId',
 		'RightId'
 	);
+	protected static $defaultSorting = NULL;
 	protected $fields = array(
 		'CoachingId',
 		'LeftId',
