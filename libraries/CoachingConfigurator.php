@@ -7,7 +7,7 @@ class CoachingConfigurator extends Application {
 	
 	public function getValues() {
 		return array(
-			'a' => 1
+			'var' => 1
 		);
 	}
 }
