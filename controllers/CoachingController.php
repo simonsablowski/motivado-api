@@ -19,19 +19,17 @@ class CoachingController extends Controller {
 		
 		$NextObjects = array();
 		foreach ($ObjectTransitions as $ObjectTransition) {
-			try {
-				$NextObject = $ObjectTransition->getRight();
-				
-				if ($condition = $ObjectTransition->getCondition()) {
-					if ($this->getConditionEvaluator()->evaluate($condition)) {
-						return $NextObject;
-					}	
-				} else {
-					$NextObjects[] = $NextObject;
-				}
-			} catch (Error $Error) {
+			if (!$NextObject = $ObjectTransition->getRight()) {
 				continue;
 			}
+			
+			if ($condition = $ObjectTransition->getCondition()) {
+				if ($this->getConditionEvaluator()->evaluate($condition)) {
+					return $NextObject;
+				}
+			}
+			
+			$NextObjects[] = $NextObject;
 		}
 		
 		return $NextObjects ? pos($NextObjects) : NULL;
