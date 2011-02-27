@@ -26,10 +26,18 @@ class ObjectTransition extends Model {
 	protected $Right = NULL;
 	
 	protected function loadLeft() {
-		return $this->setLeft(Object::find($this->getLeftId()));
+		try {
+			return $this->setLeft(Object::find($this->getLeftId()));
+		} catch (Error $Error) {
+			return $this->setLeft(NULL);
+		}
 	}
 	
 	protected function loadRight() {
-		return $this->setRight(Object::find($this->getRightId()));
+		try {
+			return $this->setRight(Object::find($this->getRightId()));
+		} catch (Error $Error) {
+			return $this->setLeft(NULL);
+		}
 	}
 }
