@@ -10,5 +10,5 @@ foreach (array('Application', 'Api') as $fileName) {
 }
 
 $Api = new Api($configuration, isset($_GET['localization']) ? $_GET['localization'] : NULL);
-$Api->setRestrictAccess(FALSE);
+$Api->setRestrictAccess(isset($configuration['restrictAccess']) ? $configuration['restrictAccess'] : TRUE);
 $Api->query(isset($_GET['query']) ? $_GET['query'] : NULL);
