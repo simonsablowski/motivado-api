@@ -8,7 +8,7 @@ $configuration['pathApplication'] = dirname(__FILE__) . '/';
 
 $configuration['includeDirectories'] = array(
 	$configuration['pathApplication'],
-	'D:/Webprojekte/nacho/'
+	'D:/Entwicklung/nacho/'
 );
 
 $configuration['Database'] = array(
@@ -28,11 +28,9 @@ $configuration['Localization'] = array(
 );
 
 $configuration['Request'] = array(
-	'defaultQuery' => 'coaching/beziehung',
-	'aliasQueries' => array(
-		'(coaching)/(\w+)' => '$1/query/$2'
-	)
+	'defaultQuery' => 'beziehung',
+	'aliasQueries' => array()
 );
 
-$configuration['debugMode'] = TRUE;
-//$configuration['debugMode'] = FALSE;
+// $configuration['debugMode'] = TRUE;
+$configuration['debugMode'] = FALSE;

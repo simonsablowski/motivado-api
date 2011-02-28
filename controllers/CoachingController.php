@@ -45,7 +45,7 @@ class CoachingController extends Controller {
 		
 		$Objects = array();
 		while (!is_null($Object)) {
-			if ($Object->getType() != 'SignUp' || !$this->getRestrictAccess()) {
+			if ($Object->getType() != 'SignUp' || $this->getRestrictAccess()) {
 				$Objects[] = $Object;
 				
 				if ($Object->getType() == 'SignUp' || $Object->getType() == 'Interrupt' || $Object->getType() == 'Coaching') {
