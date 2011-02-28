@@ -1,6 +1,7 @@
 <?php
 
 class CoachingController extends Controller {
+	protected $restrictAccess = TRUE;
 	protected $CoachingHistory = NULL;
 	protected $ConditionEvaluator = NULL;
 	
@@ -42,12 +43,9 @@ class CoachingController extends Controller {
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching);
 		
-		//TODO: of course this should not be configurable via url parameters
-		$restrictAccess = func_num_args() > 1 ? (bool)func_get_arg(1) : FALSE;
-		
 		$Objects = array();
 		while (!is_null($Object)) {
-			if ($Object->getType() != 'SignUp' || !$restrictAccess) {
+			if ($Object->getType() != 'SignUp' || !$this->getRestrictAccess()) {
 				$Objects[] = $Object;
 				
 				if ($Object->getType() == 'SignUp' || $Object->getType() == 'Interrupt' || $Object->getType() == 'Coaching') {
