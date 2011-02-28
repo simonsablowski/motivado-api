@@ -18,8 +18,8 @@ class ConditionEvaluator extends Application {
 	}
 	
 	protected function secureCondition(&$condition) {
-		if (preg_match('/[^\s\w()\']/i', $condition)) {
-			throw new Error('Condition contains invalid characters', $condition);
+		if (preg_match('/[^\s\w()\']/i', $condition, $characters)) {
+			throw new Error('Condition contains invalid characters', $characters);
 		}
 		
 		foreach ($this->getOperators() as $alias => $original) {
