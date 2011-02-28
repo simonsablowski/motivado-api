@@ -32,5 +32,8 @@ $configuration['Request'] = array(
 	'aliasQueries' => array()
 );
 
+$configuration['restrictAccess'] = FALSE;
+// $configuration['restrictAccess'] = TRUE;
+
 // $configuration['debugMode'] = TRUE;
 $configuration['debugMode'] = FALSE;
