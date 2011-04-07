@@ -4,7 +4,8 @@ class ObjectTransition extends Model {
 	protected static $primaryKey = array(
 		'CoachingId',
 		'LeftId',
-		'RightId'
+		'RightId',
+		'condition'
 	);
 	protected static $defaultSorting = NULL;
 	protected $fields = array(
