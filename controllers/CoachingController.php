@@ -57,8 +57,7 @@ class CoachingController extends Controller {
 		}
 		
 		$this->displayView('Coaching.query.php', array(
-			'Coaching' => $Coaching,
-			'Objects' => $Objects
+			'ObjectSequence' => new ObjectSequence($Coaching, $Objects)
 		));
 	}
 	
