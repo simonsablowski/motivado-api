@@ -15,8 +15,7 @@ class Coaching extends Object {
 		'modified'
 	);
 	protected $requiredFields = array(
-		'language',
-		'title'
+		'key'
 	);
 	
 	protected $Objects = NULL;
