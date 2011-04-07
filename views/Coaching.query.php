@@ -1,2 +1,2 @@
-<? echo $ObjectSequence->asXml(); ?>
-<? // echo $ObjectSequence->asJson(); ?>
+<? // echo $ObjectSequence->asXml(); ?>
+<? echo $ObjectSequence->asJson(); ?>

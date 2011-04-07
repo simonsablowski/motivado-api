@@ -2,7 +2,7 @@
 
 $configuration = array();
 
-$configuration['header'] = 'Content-Type: text/xml; charset=utf-8';
+// $configuration['header'] = 'Content-Type: text/xml; charset=utf-8';
 
 $configuration['pathApplication'] = dirname(__FILE__) . '/';
 
@@ -14,7 +14,7 @@ $configuration['includeDirectories'] = array(
 $configuration['Database'] = array(
 	'type' => 'MySql',
 	'host' => 'localhost',
-	'name' => 'motivado_api',
+	'name' => 'motivado_importer',
 	'user' => 'root',
 	'password' => ''
 );
@@ -35,5 +35,5 @@ $configuration['Request'] = array(
 $configuration['restrictAccess'] = FALSE;
 // $configuration['restrictAccess'] = TRUE;
 
-// $configuration['debugMode'] = TRUE;
-$configuration['debugMode'] = FALSE;
+$configuration['debugMode'] = TRUE;
+// $configuration['debugMode'] = FALSE;
