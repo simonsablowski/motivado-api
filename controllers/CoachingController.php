@@ -28,9 +28,9 @@ class CoachingController extends Controller {
 				if ($this->getConditionEvaluator()->evaluate($condition)) {
 					return $NextObject;
 				}
+			} else {
+				$NextObjects[] = $NextObject;
 			}
-			
-			$NextObjects[] = $NextObject;
 		}
 		
 		return $NextObjects ? pos($NextObjects) : NULL;
