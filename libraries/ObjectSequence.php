@@ -14,11 +14,7 @@ class ObjectSequence extends Application {
 		}
 	}
 	
-	public function asXml() {
-		return Xml::dumpObject($this, $this->getClassName());
-	}
-	
-	public function asJson() {
+	public function __toString() {
 		return Json::encode($this);
 	}
 }
