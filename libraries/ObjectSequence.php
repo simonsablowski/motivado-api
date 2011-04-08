@@ -13,8 +13,4 @@ class ObjectSequence extends Application {
 			}
 		}
 	}
-	
-	public function __toString() {
-		return Json::encode($this);
-	}
 }
