@@ -1,1 +1,1 @@
-<? echo (string)$ObjectSequence; ?>
+<? echo Json::encode($ObjectSequence); ?>
