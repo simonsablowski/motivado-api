@@ -1,1 +1,1 @@
-<? echo Json::encode($ObjectSequence); ?>
+<? echo ($json = Json::encode($ObjectSequence)) && $this->getConfiguration('formatJson') ? Json::format($json) : $json; ?>
