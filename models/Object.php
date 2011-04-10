@@ -19,9 +19,7 @@ class Object extends Model {
 		'key'
 	);
 	protected $hiddenFields = array(
-		'id',
 		'CoachingId',
-		'type',
 		'status',
 		'created',
 		'modified'

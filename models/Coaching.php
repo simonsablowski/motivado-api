@@ -1,6 +1,6 @@
 <?php
 
-class Coaching extends Object {
+class Coaching extends Model {
 	protected static $defaultSorting = array(
 		'title' => 'ascending'
 	);
@@ -16,6 +16,12 @@ class Coaching extends Object {
 	);
 	protected $requiredFields = array(
 		'key'
+	);
+	protected $hiddenFields = array(
+		'id',
+		'status',
+		'created',
+		'modified'
 	);
 	
 	protected $Objects = NULL;
