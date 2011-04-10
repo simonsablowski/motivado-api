@@ -8,12 +8,13 @@ $configuration['pathApplication'] = dirname(__FILE__) . '/';
 
 $configuration['includeDirectories'] = array(
 	$configuration['pathApplication'],
-	'D:/Entwicklung/nacho/'
+	'D:/Webprojekte/nacho/'
 );
 
 $configuration['Database'] = array(
 	'type' => 'MySql',
 	'host' => 'localhost',
+	// 'name' => 'motivado_api',
 	'name' => 'motivado_importer',
 	'user' => 'root',
 	'password' => ''
@@ -28,7 +29,7 @@ $configuration['Localization'] = array(
 );
 
 $configuration['Request'] = array(
-	'defaultQuery' => 'beziehung',
+	'defaultQuery' => 'test',
 	'aliasQueries' => array()
 );
 

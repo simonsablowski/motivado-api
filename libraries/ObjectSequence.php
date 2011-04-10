@@ -5,11 +5,11 @@ class ObjectSequence extends Application {
 		foreach ($Coaching->getData() as $field => $value) {
 			$this->$field = $value;
 		}
-		$this->Objects = array();
+		$this->objects = array();
 		foreach ($Objects as $n => $Object) {
-			$this->Objects[$n] = $Object;
+			$this->objects[$n] = array();
 			foreach ($Object->getData() as $field => $value) {
-				$this->Objects[$n]->$field = $field != 'properties' ? $value : Json::decode($value);
+				$this->objects[$n][$field] = $field != 'properties' ? $value : Json::decode($value);
 			}
 		}
 	}
