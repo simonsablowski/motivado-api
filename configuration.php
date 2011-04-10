@@ -2,8 +2,6 @@
 
 $configuration = array();
 
-// $configuration['header'] = 'Content-Type: text/xml; charset=utf-8';
-
 $configuration['pathApplication'] = dirname(__FILE__) . '/';
 
 $configuration['includeDirectories'] = array(
@@ -35,6 +33,9 @@ $configuration['Request'] = array(
 
 $configuration['restrictAccess'] = FALSE;
 // $configuration['restrictAccess'] = TRUE;
+
+$configuration['formatJson'] = TRUE;
+// $configuration['formatJson'] = FALSE;
 
 $configuration['debugMode'] = TRUE;
 // $configuration['debugMode'] = FALSE;
