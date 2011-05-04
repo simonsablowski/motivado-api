@@ -36,6 +36,15 @@ class CoachingController extends Controller {
 		return $NextObjects ? pos($NextObjects) : NULL;
 	}
 	
+	protected function setupCoachingHistory() {
+		$this->setCoachingHistory(new CoachingHistory);
+		$this->getCoachingHistory()->setSession($this->getSession());
+	}
+	
+	protected function setupConditionEvaluator() {
+		$this->setConditionEvaluator(new ConditionEvaluator);
+	}
+	
 	public function query($CoachingKey) {
 		$this->setupCoachingHistory();
 		$this->setupConditionEvaluator();
@@ -61,16 +70,9 @@ class CoachingController extends Controller {
 		));
 	}
 	
-	protected function setupCoachingHistory() {
-		$this->setCoachingHistory(new CoachingHistory);
-		$this->getCoachingHistory()->setSession($this->getSession());
-	}
-	
 	public function extendCoachingHistory($CoachingKey, $ObjectId) {
+		$this->setupCoachingHistory();
+		
 		return $this->getCoachingHistory()->extend(Coaching::findByKey($CoachingKey), Object::find($ObjectId));
-	}
-	
-	protected function setupConditionEvaluator() {
-		$this->setConditionEvaluator(new ConditionEvaluator);
 	}
 }
