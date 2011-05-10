@@ -1,7 +1,6 @@
 <?php
 
 class CoachingController extends Controller {
-	protected $restrictAccess = TRUE;
 	protected $CoachingHistory = NULL;
 	protected $ConditionEvaluator = NULL;
 	
@@ -37,11 +36,15 @@ class CoachingController extends Controller {
 	}
 	
 	protected function setupCoachingHistory() {
+		if ($this->getCoachingHistory()) return;
+		
 		$this->setCoachingHistory(new CoachingHistory);
 		$this->getCoachingHistory()->setSession($this->getSession());
 	}
 	
 	protected function setupConditionEvaluator() {
+		if ($this->getConditionEvaluator()) return;
+		
 		$this->setConditionEvaluator(new ConditionEvaluator);
 	}
 	
@@ -54,14 +57,7 @@ class CoachingController extends Controller {
 		
 		$Objects = array();
 		while (!is_null($Object)) {
-			if ($Object->getType() != 'SignUp' || $this->getRestrictAccess()) {
-				$Objects[] = $Object;
-				
-				if ($Object->getType() == 'SignUp' || $Object->getType() == 'Interrupt' || $Object->getType() == 'Coaching') {
-					break;
-				}
-			}
-			
+			$Objects[] = $Object;
 			$Object = $this->getNextObject($Object);
 		}
 		
