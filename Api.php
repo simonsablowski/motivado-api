@@ -5,7 +5,6 @@ class Api extends Application {
 	
 	protected function setupController() {
 		parent::setupController();
-		$this->getController()->setRestrictAccess($this->getRestrictAccess());
 	}
 	
 	public function query($query) {
