@@ -10,4 +10,4 @@ foreach (array('Application', 'Api') as $fileName) {
 }
 
 $Api = new Api($configuration, isset($_GET['localization']) ? $_GET['localization'] : NULL);
-$Api->query(isset($_GET['query']) ? $_GET['query'] : NULL);
+$Api->query(isset($_GET['CoachingKey']) ? $_GET['CoachingKey'] : NULL);
