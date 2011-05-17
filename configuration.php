@@ -2,6 +2,8 @@
 
 $configuration = array();
 
+$configuration['header'] = 'text/json';
+
 $configuration['pathApplication'] = dirname(__FILE__) . '/';
 
 $configuration['includeDirectories'] = array(
@@ -24,11 +26,6 @@ $configuration['Localization'] = array(
 		'language' => 'de_DE',
 		'locale' => 'de_DE'
 	)
-);
-
-$configuration['Request'] = array(
-	'defaultQuery' => 'test',
-	'aliasQueries' => array()
 );
 
 $configuration['restrictAccess'] = FALSE;
