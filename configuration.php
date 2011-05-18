@@ -28,9 +28,6 @@ $configuration['Localization'] = array(
 	)
 );
 
-$configuration['restrictAccess'] = FALSE;
-// $configuration['restrictAccess'] = TRUE;
-
 $configuration['formatJson'] = TRUE;
 // $configuration['formatJson'] = FALSE;
 
