@@ -5,8 +5,11 @@ class CoachingController extends Controller {
 	protected $ConditionEvaluator = NULL;
 	
 	protected function getStartObject(Coaching $Coaching) {
-		if ($StartObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) {
-			return $StartObject;
+		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) &&
+				($NextObject = $this->getNextObject($CurrentObject))) {
+			return $NextObject;
+		} else if ($CurrentObject) {
+			return $CurrentObject;
 		}
 		return $Coaching->getFirstObject();
 	}
