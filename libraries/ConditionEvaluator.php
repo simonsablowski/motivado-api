@@ -42,8 +42,8 @@ class ConditionEvaluator extends Application {
 		}
 		
 		foreach ($variables[0] as $n => $part) {
-			$variable = $this->getVariableName($variables[2][$n]);
-			$condition = str_replace($part, str_replace($variable, '$' . $variable, $part), $condition);
+			$variable = '$' . $this->getVariableName($variable);
+			$condition = str_replace($part, str_replace($variables[2][$n], $variable, $part), $condition);
 		}
 		
 		return $condition = sprintf('return %s;', $condition);
