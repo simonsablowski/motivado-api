@@ -4,11 +4,11 @@ class CoachingController extends Controller {
 	protected $CoachingHistory = NULL;
 	protected $ConditionEvaluator = NULL;
 	
-	protected function getStartObject(Coaching $Coaching) {
+	protected function getStartObject(Coaching $Coaching, $initial = TRUE) {
 		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) &&
-				($NextObject = $this->getNextObject($CurrentObject))) {
+				!$initial && ($NextObject = $this->getNextObject($CurrentObject))) {
 			return $NextObject;
-		} else if ($CurrentObject) {
+		} else if (!is_null($CurrentObject)) {
 			return $CurrentObject;
 		}
 		return $Coaching->getFirstObject();
@@ -51,12 +51,12 @@ class CoachingController extends Controller {
 		$this->setConditionEvaluator(new ConditionEvaluator);
 	}
 	
-	public function query($CoachingKey) {
+	public function query($CoachingKey, $initial = TRUE) {
 		$this->setupCoachingHistory();
 		$this->setupConditionEvaluator();
 		
 		$Coaching = Coaching::findByKey($CoachingKey);
-		$Object = $this->getStartObject($Coaching);
+		$Object = $this->getStartObject($Coaching, (bool)$initial);
 		
 		$Objects = array();
 		while (!is_null($Object)) {
