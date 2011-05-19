@@ -12,9 +12,14 @@ class ConditionEvaluator extends Application {
 		'and' => '&&',
 		'or' => '||'
 	);
+	const prefix = 'value_';
 	
 	public function __construct() {
 		$this->setCoachingConfigurator(new CoachingConfigurator);
+	}
+	
+	protected function getVariableName($variable) {
+		return self::prefix . $variable;
 	}
 	
 	protected function secureCondition(&$condition) {
@@ -37,7 +42,7 @@ class ConditionEvaluator extends Application {
 		}
 		
 		foreach ($variables[0] as $n => $part) {
-			$variable = $variables[2][$n];
+			$variable = $this->getVariableName($variables[2][$n]);
 			$condition = str_replace($part, str_replace($variable, '$' . $variable, $part), $condition);
 		}
 		
@@ -46,7 +51,10 @@ class ConditionEvaluator extends Application {
 	
 	public function evaluate($condition) {
 		try {
-			extract($this->getCoachingConfigurator()->getValues());
+			foreach ($this->getCoachingConfigurator()->getValues() as $name => $item) {
+				$variable = $this->getVariableName($name);
+				$$variable = $item['value'];
+			}
 			
 			$level = error_reporting(0);
 			$this->secureCondition($condition);
