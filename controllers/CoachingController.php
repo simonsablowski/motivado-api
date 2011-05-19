@@ -8,7 +8,7 @@ class CoachingController extends Controller {
 		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) &&
 				!$initial && ($NextObject = $this->getNextObject($CurrentObject))) {
 			return $NextObject;
-		} else if (!is_null($CurrentObject)) {
+		} else if ($CurrentObject) {
 			return $CurrentObject;
 		}
 		return $Coaching->getFirstObject();
