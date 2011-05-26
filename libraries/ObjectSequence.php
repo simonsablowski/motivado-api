@@ -1,7 +1,7 @@
 <?php
 
 class ObjectSequence extends Application {
-	public function __construct(Coaching $Coaching, $Objects) {
+	public function __construct(Coaching $Coaching, $Objects, $endReached = FALSE) {
 		foreach ($Coaching->getData() as $field => $value) {
 			$this->$field = $value;
 		}
@@ -11,6 +11,11 @@ class ObjectSequence extends Application {
 			foreach ($Object->getData() as $field => $value) {
 				$this->objects[$n][$field] = $field != 'properties' ? $value : Json::decode($value);
 			}
+		}
+		if ($endReached) {
+			$this->objects[] = array(
+				'end' => TRUE
+			);
 		}
 	}
 }

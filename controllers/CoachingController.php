@@ -16,7 +16,6 @@ class CoachingController extends Controller {
 	
 	protected function getNextObject(Object $Object) {
 		$ObjectTransitions = ObjectTransition::findAll(array(
-			'CoachingId' => $Object->getCoachingId(),
 			'LeftId' => $Object->getId()
 		));
 		
@@ -58,14 +57,19 @@ class CoachingController extends Controller {
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching, (bool)$initial);
 		
+		$endReached = FALSE;
+		if (!$this->getNextObject($Object)) {
+			$endReached = TRUE;
+		}
+		
 		$Objects = array();
 		while (!is_null($Object)) {
 			$Objects[] = $Object;
 			$Object = $this->getNextObject($Object);
 		}
 		
-		$this->displayView('Coaching.query.php', array(
-			'ObjectSequence' => new ObjectSequence($Coaching, $Objects)
+		return $this->displayView('Coaching.query.php', array(
+			'ObjectSequence' => new ObjectSequence($Coaching, $Objects, $endReached)
 		));
 	}
 	
