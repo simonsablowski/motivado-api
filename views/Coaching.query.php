@@ -1,1 +1,1 @@
-<? echo ($json = Json::encode($ObjectSequence)) && $this->getConfiguration('formatJson') ? Json::format($json) : $json;
+<? echo ($json = \Motivado\Api\Json::encode($ObjectSequence)) && $this->getConfiguration('formatJson') ? \Motivado\Api\Json::format($json) : $json;

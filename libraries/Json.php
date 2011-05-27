@@ -1,6 +1,8 @@
 <?php
 
-class Json extends Application {
+namespace Motivado\Api;
+
+class Json extends \Application {
 	public static function encode($value) {
 		return json_encode($value);
 	}

@@ -1,6 +1,8 @@
 <?php
 
-class CoachingController extends Controller {
+namespace Motivado\Api;
+
+class CoachingController extends \Controller {
 	protected $CoachingHistory = NULL;
 	protected $ConditionEvaluator = NULL;
 	

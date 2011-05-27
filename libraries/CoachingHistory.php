@@ -1,6 +1,8 @@
 <?php
 
-class CoachingHistory extends Application {
+namespace Motivado\Api;
+
+class CoachingHistory extends \Application {
 	public function __construct() {
 		
 	}

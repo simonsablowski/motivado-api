@@ -1,6 +1,8 @@
 <?php
 
-class ConditionEvaluator extends Application {
+namespace Motivado\Api;
+
+class ConditionEvaluator extends \Application {
 	protected $CoachingConfigurator = NULL;
 	protected $operators = array(
 		'is' => '==',

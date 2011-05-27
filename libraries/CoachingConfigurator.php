@@ -1,6 +1,8 @@
 <?php
 
-class CoachingConfigurator extends Application {
+namespace Motivado\Api;
+
+class CoachingConfigurator extends \Application {
 	protected $values = array();
 	
 	public function __construct() {
