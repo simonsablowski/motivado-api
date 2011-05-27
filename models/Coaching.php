@@ -1,6 +1,8 @@
 <?php
 
-class Coaching extends Model {
+namespace Motivado\Api;
+
+class Coaching extends \Model {
 	protected static $defaultSorting = array(
 		'title' => 'ascending'
 	);

@@ -1,7 +1,9 @@
 <?php
 
-class ObjectSequence extends Application {
-	public function __construct(Coaching $Coaching, $Objects, $endReached = FALSE) {
+namespace Motivado\Api;
+
+class ObjectSequence extends \Application {
+	public function __construct(Coaching $Coaching, $Objects, $endReached) {
 		foreach ($Coaching->getData() as $field => $value) {
 			$this->$field = $value;
 		}

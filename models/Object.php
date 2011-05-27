@@ -1,6 +1,8 @@
 <?php
 
-class Object extends Model {
+namespace Motivado\Api;
+
+class Object extends \Model {
 	protected $fields = array(
 		'id',
 		'CoachingId',

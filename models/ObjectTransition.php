@@ -1,6 +1,8 @@
 <?php
 
-class ObjectTransition extends Model {
+namespace Motivado\Api;
+
+class ObjectTransition extends \Model {
 	protected static $primaryKey = array(
 		'CoachingId',
 		'LeftId',
