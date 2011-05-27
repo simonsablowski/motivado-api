@@ -30,16 +30,16 @@ class Coaching extends \Model {
 	protected $FirstObject = NULL;
 	
 	protected function loadObjects() {
-		$ObjectTransitions = ObjectTransition::findAll(array(
+		$ObjectTransitions = \Motivado\Api\ObjectTransition::findAll(array(
 			'CoachingId' => $this->getId()
 		));
 		$Objects = array();
 		foreach ($ObjectTransitions as $ObjectTransition) {
 			try {
-				if (!in_array($Object = Object::find($ObjectTransition->getRightId()), $Objects)) {
+				if (!in_array($Object = \Motivado\Api\Object::find($ObjectTransition->getRightId()), $Objects)) {
 					$Objects[] = $Object;
 				}
-			} catch (Error $Error) {
+			} catch (\Error $Error) {
 				continue;
 			}
 		}
@@ -47,10 +47,10 @@ class Coaching extends \Model {
 	}
 		
 	protected function loadFirstObject() {
-		$ObjectTransition = ObjectTransition::findFirst(array(
+		$ObjectTransition = \Motivado\Api\ObjectTransition::findFirst(array(
 			'CoachingId' => $this->getId(),
 			'LeftId' => 0
 		));
-		$this->setFirstObject(Object::find($ObjectTransition->getRightId()));
+		$this->setFirstObject(\Motivado\Api\Object::find($ObjectTransition->getRightId()));
 	}
 }

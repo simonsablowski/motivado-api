@@ -30,16 +30,16 @@ class ObjectTransition extends \Model {
 	
 	protected function loadLeft() {
 		try {
-			return $this->setLeft(Object::find($this->getLeftId()));
-		} catch (Error $Error) {
+			return $this->setLeft(\Motivado\Api\Object::find($this->getLeftId()));
+		} catch (\Error $Error) {
 			return $this->setLeft(NULL);
 		}
 	}
 	
 	protected function loadRight() {
 		try {
-			return $this->setRight(Object::find($this->getRightId()));
-		} catch (Error $Error) {
+			return $this->setRight(\Motivado\Api\Object::find($this->getRightId()));
+		} catch (\Error $Error) {
 			return $this->setLeft(NULL);
 		}
 	}
