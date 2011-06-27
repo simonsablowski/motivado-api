@@ -36,7 +36,7 @@ class CoachingController extends \Controller {
 			}
 		}
 		
-		return $NextObjects ? pos($NextObjects) : NULL;
+		return count($NextObjects) == 1 ? pos($NextObjects) : NULL;
 	}
 	
 	protected function setupCoachingHistory() {
