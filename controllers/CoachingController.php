@@ -60,11 +60,10 @@ class CoachingController extends \Controller {
 		
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching, (bool)$initial);
-		
-		$endReached = $this->getNextObject($Object) === FALSE;
+		$endReached = is_null($this->getNextObject($Object));
 		
 		$Objects = array();
-		while ($Object) {
+		while (is_object($Object)) {
 			$Objects[] = $Object;
 			$Object = $this->getNextObject($Object);
 		}

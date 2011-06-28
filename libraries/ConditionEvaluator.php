@@ -26,7 +26,7 @@ class ConditionEvaluator extends \Application {
 	
 	protected function secureCondition(&$condition) {
 		if (preg_match('/[^\s\w()\']/i', $condition, $characters)) {
-			throw new Error('Condition contains invalid characters', $characters);
+			throw new \Error('Condition contains invalid characters', $characters);
 		}
 		
 		foreach ($this->getOperators() as $alias => $original) {
@@ -34,11 +34,11 @@ class ConditionEvaluator extends \Application {
 		}
 		
 		if (!preg_match_all('/(^|\s|\()([a-z]{1}\w+)([^\s\)$])?/i', $condition, $variables)) {
-			throw new Error('Condition contains no valid variables', $condition);
+			throw new \Error('Condition contains no valid variables', $condition);
 		} else {
 			foreach ($variables[3] as $n => $element) {
 				if ($element) {
-					throw new Error('Condition contains invalid element', $variables[0][$n]);
+					throw new \Error('Condition contains invalid element', $variables[0][$n]);
 				}
 			}
 		}
@@ -65,7 +65,7 @@ class ConditionEvaluator extends \Application {
 			error_reporting($level);
 			
 			return $result;
-		} catch (Error $Error) {
+		} catch (\Error $Error) {
 			return FALSE;
 		}
 	}
