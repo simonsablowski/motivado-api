@@ -36,7 +36,9 @@ class CoachingController extends \Controller {
 			}
 		}
 		
-		return count($NextObjects) == 1 ? pos($NextObjects) : NULL;
+		if (count($NextObjects) == 1) return pos($NextObjects);
+		else if (count($NextObjects) > 1) return FALSE;
+		else return NULL;
 	}
 	
 	protected function setupCoachingHistory() {
@@ -59,13 +61,10 @@ class CoachingController extends \Controller {
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching, (bool)$initial);
 		
-		$endReached = FALSE;
-		if (!$this->getNextObject($Object)) {
-			$endReached = TRUE;
-		}
+		$endReached = $this->getNextObject($Object) === FALSE;
 		
 		$Objects = array();
-		while (!is_null($Object)) {
+		while ($Object) {
 			$Objects[] = $Object;
 			$Object = $this->getNextObject($Object);
 		}
