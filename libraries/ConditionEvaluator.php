@@ -17,7 +17,7 @@ class ConditionEvaluator extends \Application {
 	const prefix = 'value_';
 	
 	public function __construct() {
-		$this->setCoachingConfigurator(new CoachingConfigurator);
+		$this->setCoachingConfigurator(new \CoachingConfigurator);
 	}
 	
 	protected function getVariableName($variable) {
@@ -33,7 +33,7 @@ class ConditionEvaluator extends \Application {
 			$condition = preg_replace(sprintf('/(\s+)%s(\s+)/', $alias), sprintf('$1%s$2', $original), $condition);
 		}
 		
-		if (!preg_match_all('/(^|\s|\()([a-z]{1}\w+)([^\s\)$])?/i', $condition, $variables)) {
+		if (!preg_match_all('/(^|\s|\()([a-z0-9]{1}\w+)([^\s\)$])?/i', $condition, $variables)) {
 			throw new \Error('Condition contains no valid variables', $condition);
 		} else {
 			foreach ($variables[3] as $n => $element) {
@@ -56,7 +56,7 @@ class ConditionEvaluator extends \Application {
 		try {
 			foreach ($this->getCoachingConfigurator()->getValues() as $name => $item) {
 				$variable = $this->getVariableName($name);
-				$$variable = $item['value'];
+				$$variable = \Motivado\Api\Json::decode($item['value']);
 			}
 			
 			$level = error_reporting(0);
