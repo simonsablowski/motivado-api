@@ -27,12 +27,12 @@ class CoachingController extends \Controller {
 				continue;
 			}
 			
+			$NextObjects[] = $NextObject;
+			
 			if ($condition = $ObjectTransition->getCondition()) {
 				if ($this->getConditionEvaluator()->evaluate($condition)) {
 					return $NextObject;
 				}
-			} else {
-				$NextObjects[] = $NextObject;
 			}
 		}
 		
