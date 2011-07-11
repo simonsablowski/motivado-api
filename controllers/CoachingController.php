@@ -31,7 +31,9 @@ class CoachingController extends \Controller {
 			
 			if ($condition = $ObjectTransition->getCondition()) {
 				if ($this->getConditionEvaluator()->evaluate($condition)) {
-					return $NextObject;
+					if (!in_array($NextObject, $this->getCoachingHistory()->getData($Coaching))) {
+						return $NextObject;
+					}
 				}
 			}
 		}
@@ -64,10 +66,6 @@ class CoachingController extends \Controller {
 		
 		$Objects = array();
 		while (is_object($Object)) {
-			if (in_array($Object, $this->getCoachingHistory()->getData($Coaching))) {
-				break;
-			}
-			
 			$Objects[] = $Object;
 			$Object = $this->getNextObject($Coaching, $Object);
 		}
