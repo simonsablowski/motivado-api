@@ -25,8 +25,6 @@ class CoachingController extends \Controller {
 		foreach ($ObjectTransitions as $ObjectTransition) {
 			if (!$NextObject = $ObjectTransition->getRight()) {
 				continue;
-			} else if (in_array($NextObject, $this->getCoachingHistory()->getData($Coaching))) {
-				break;
 			} else {
 				$NextObjects[] = $NextObject;
 			}
@@ -66,6 +64,10 @@ class CoachingController extends \Controller {
 		
 		$Objects = array();
 		while (is_object($Object)) {
+			if (in_array($Object, $this->getCoachingHistory()->getData($Coaching))) {
+				break;
+			}
+			
 			$Objects[] = $Object;
 			$Object = $this->getNextObject($Coaching, $Object);
 		}
