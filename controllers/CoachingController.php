@@ -5,10 +5,11 @@ namespace Motivado\Api;
 class CoachingController extends \Controller {
 	protected $CoachingHistory = NULL;
 	protected $ConditionEvaluator = NULL;
+	protected $evaluatedConditions = array();
 	
 	protected function getStartObject(Coaching $Coaching, $initial = TRUE) {
 		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) &&
-				!$initial && ($NextObject = $this->getNextObject($Coaching, $CurrentObject))) {
+				!$initial && ($NextObject = $this->getNextObject($CurrentObject))) {
 			return $NextObject;
 		} else if ($CurrentObject) {
 			return $CurrentObject;
@@ -16,7 +17,7 @@ class CoachingController extends \Controller {
 		return $Coaching->getFirstObject();
 	}
 	
-	protected function getNextObject(Coaching $Coaching, Object $Object) {
+	protected function getNextObject(Object $Object) {
 		$ObjectTransitions = ObjectTransition::findAll(array(
 			'LeftId' => $Object->getId()
 		));
@@ -31,8 +32,11 @@ class CoachingController extends \Controller {
 			
 			if ($condition = $ObjectTransition->getCondition()) {
 				if ($this->getConditionEvaluator()->evaluate($condition)) {
-					if (!in_array($NextObject, $this->getCoachingHistory()->getData($Coaching))) {
+					if (!in_array($condition, $this->evaluatedConditions)) {
+						$this->evaluatedConditions[] = $condition;
 						return $NextObject;
+					} else {
+						return FALSE;
 					}
 				}
 			}
@@ -62,12 +66,12 @@ class CoachingController extends \Controller {
 		
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching, (bool)$initial);
-		$endReached = is_null($this->getNextObject($Coaching, $Object));
+		$endReached = is_null($this->getNextObject($Object));
 		
 		$Objects = array();
 		while (is_object($Object)) {
 			$Objects[] = $Object;
-			$Object = $this->getNextObject($Coaching, $Object);
+			$Object = $this->getNextObject($Object);
 		}
 		
 		return $this->displayView('Coaching.query.php', array(
