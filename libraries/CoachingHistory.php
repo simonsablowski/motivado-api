@@ -20,7 +20,11 @@ class CoachingHistory extends \Application {
 	
 	public function extend(Coaching $Coaching, Object $Object) {
 		$data = $this->getData();
-		$data[$Coaching->getId()][] = $Object;
+		if (isset($data[$Coaching->getId()])) {
+			$data[$Coaching->getId()][] = $Object;
+		} else {
+			$data[$Coaching->getId()] = array($Object);
+		}
 		return $this->getSession()->setData('CoachingHistory', $data);
 	}
 	
