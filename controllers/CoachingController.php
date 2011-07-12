@@ -9,7 +9,7 @@ class CoachingController extends \Controller {
 	
 	protected function getStartObject(Coaching $Coaching, $initial = TRUE) {
 		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) &&
-				!$initial && ($NextObject = $this->getNextObject($CurrentObject))) {
+				!$initial && ($NextObject = $this->getNextObject($Coaching, $CurrentObject))) {
 			return $NextObject;
 		} else if ($CurrentObject) {
 			return $CurrentObject;
@@ -17,7 +17,7 @@ class CoachingController extends \Controller {
 		return $Coaching->getFirstObject();
 	}
 	
-	protected function getNextObject(Object $Object) {
+	protected function getNextObject(Coaching $Coaching, Object $Object) {
 		$ObjectTransitions = ObjectTransition::findAll(array(
 			'LeftId' => $Object->getId()
 		));
@@ -26,8 +26,8 @@ class CoachingController extends \Controller {
 		foreach ($ObjectTransitions as $ObjectTransition) {
 			if (!$NextObject = $ObjectTransition->getRight()) {
 				continue;
-			} else {
-				$NextObjects[] = $NextObject;
+			} else if (!isset($NextObjects[$NextObject->getId()])) {
+				$NextObjects[$NextObject->getId()] = $NextObject;
 			}
 			
 			if ($condition = $ObjectTransition->getCondition()) {
@@ -66,12 +66,12 @@ class CoachingController extends \Controller {
 		
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching, (bool)$initial);
-		$endReached = is_null($this->getNextObject($Object));
+		$endReached = is_null($this->getNextObject($Coaching, $Object));
 		
 		$Objects = array();
 		while (is_object($Object)) {
 			$Objects[] = $Object;
-			$Object = $this->getNextObject($Object);
+			$Object = $this->getNextObject($Coaching, $Object);
 		}
 		
 		return $this->displayView('Coaching.query.php', array(
