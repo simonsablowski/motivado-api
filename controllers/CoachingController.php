@@ -9,7 +9,7 @@ class CoachingController extends \Controller {
 	
 	protected function getStartObject(Coaching $Coaching, $initial = TRUE) {
 		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) &&
-				!$initial && ($NextObject = $this->getNextObject($Coaching, $CurrentObject))) {
+				!$initial && ($NextObject = $this->getNextObject($Coaching, $CurrentObject, TRUE))) {
 			return $NextObject;
 		} else if ($CurrentObject) {
 			return $CurrentObject;
@@ -17,12 +17,13 @@ class CoachingController extends \Controller {
 		return $Coaching->getFirstObject();
 	}
 	
-	protected function getNextObject(Coaching $Coaching, Object $Object) {
+	protected function getNextObject(Coaching $Coaching, Object $Object, $start = FALSE) {
 		$ObjectTransitions = ObjectTransition::findAll(array(
 			'LeftId' => $Object->getId()
 		));
 		
 		$NextObjects = array();
+		$IndependentNextObjects = array();
 		foreach ($ObjectTransitions as $ObjectTransition) {
 			if (!$NextObject = $ObjectTransition->getRight()) {
 				continue;
@@ -39,12 +40,20 @@ class CoachingController extends \Controller {
 						return FALSE;
 					}
 				}
+			} else if (!isset($IndependentNextObjects[$NextObject->getId()])) {
+				$IndependentNextObjects[$NextObject->getId()] = $NextObject;
 			}
 		}
 		
-		if (count($NextObjects) == 1) return pos($NextObjects);
-		else if (count($NextObjects) > 1) return FALSE;
-		else return NULL;
+		if (count($NextObjects) == 1) {
+			return pos($NextObjects);
+		} else if ($start && count($NextObjects) > 1 && count($IndependentNextObjects) > 0) {
+			return pos($IndependentNextObjects);
+		} else if (count($NextObjects) > 1) {
+			return FALSE;
+		} else {
+			return NULL;
+		}
 	}
 	
 	protected function setupCoachingHistory() {
