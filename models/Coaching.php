@@ -45,7 +45,7 @@ class Coaching extends \Model {
 		}
 		$this->setObjects($Objects);
 	}
-		
+	
 	protected function loadFirstObject() {
 		$ObjectTransition = \Motivado\Api\ObjectTransition::findFirst(array(
 			'CoachingId' => $this->getId(),
