@@ -8,9 +8,8 @@ class CoachingController extends \Controller {
 	protected $evaluatedConditions = array();
 	
 	protected function getStartObject(Coaching $Coaching, $initial = TRUE) {
-		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) &&
-				!$initial && ($NextObject = $this->getNextObject($Coaching, $CurrentObject, TRUE))) {
-			return $NextObject;
+		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) && !$initial) {
+			return $this->getNextObject($Coaching, $CurrentObject, TRUE);
 		} else if ($CurrentObject) {
 			return $CurrentObject;
 		}
@@ -25,11 +24,8 @@ class CoachingController extends \Controller {
 		$NextObjects = array();
 		$IndependentNextObjects = array();
 		foreach ($ObjectTransitions as $ObjectTransition) {
-			if (!$NextObject = $ObjectTransition->getRight()) {
-				continue;
-			} else if (!isset($NextObjects[$NextObject->getId()])) {
-				$NextObjects[$NextObject->getId()] = $NextObject;
-			}
+			$id = ($NextObject = $ObjectTransition->getRight()) ? $NextObject->getId() : NULL;
+			$NextObjects[$id] = $NextObject;
 			
 			if ($condition = $ObjectTransition->getCondition()) {
 				if ($this->getConditionEvaluator()->evaluate($condition)) {
@@ -40,8 +36,8 @@ class CoachingController extends \Controller {
 						return FALSE;
 					}
 				}
-			} else if (!isset($IndependentNextObjects[$NextObject->getId()])) {
-				$IndependentNextObjects[$NextObject->getId()] = $NextObject;
+			} else {
+				$IndependentNextObjects[$id] = $NextObject;
 			}
 		}
 		
@@ -75,7 +71,7 @@ class CoachingController extends \Controller {
 		
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching, (bool)$initial);
-		$endReached = is_null($this->getNextObject($Coaching, $Object));
+		$endReached = is_null($Object) || is_null($this->getNextObject($Coaching, $Object));
 		
 		$Objects = array();
 		while (is_object($Object)) {
