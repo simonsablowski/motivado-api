@@ -71,7 +71,7 @@ class CoachingController extends \Controller {
 		
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching, (bool)$initial);
-		$endReached = is_null($Object) || is_null($this->getNextObject($Coaching, $Object));
+		$endReached = is_null($Object) || (is_object($Object) && is_null($this->getNextObject($Coaching, $Object)));
 		
 		$Objects = array();
 		while (is_object($Object)) {
