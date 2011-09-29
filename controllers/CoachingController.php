@@ -5,7 +5,7 @@ namespace Motivado\Api;
 class CoachingController extends \Controller {
 	protected $CoachingHistory = NULL;
 	protected $ConditionEvaluator = NULL;
-	protected $evaluatedConditions = array();
+	protected $LoopHandler = NULL;
 	
 	protected function getStartObject(Coaching $Coaching, $initial = TRUE) {
 		if (($CurrentObject = $this->getCoachingHistory()->getCurrentObject($Coaching)) && !$initial) {
@@ -29,8 +29,10 @@ class CoachingController extends \Controller {
 			
 			if ($condition = $ObjectTransition->getCondition()) {
 				if ($this->getConditionEvaluator()->evaluate($condition)) {
-					if (!in_array($condition, $this->evaluatedConditions)) {
-						$this->evaluatedConditions[] = $condition;
+					if ($start) {
+						return $NextObject;
+					} else if (!$this->getLoopHandler()->exists($condition)) {
+						$this->getLoopHandler()->register($condition);
 						return $NextObject;
 					} else {
 						return FALSE;
@@ -65,9 +67,17 @@ class CoachingController extends \Controller {
 		$this->setConditionEvaluator(new ConditionEvaluator);
 	}
 	
+	protected function setupLoopHandler() {
+		if ($this->getLoopHandler()) return;
+		
+		$this->setLoopHandler(new LoopHandler);
+		$this->getLoopHandler()->setSession($this->getSession());
+	}
+	
 	public function query($CoachingKey, $initial = TRUE) {
 		$this->setupCoachingHistory();
 		$this->setupConditionEvaluator();
+		$this->setupLoopHandler();
 		
 		$Coaching = Coaching::findByKey($CoachingKey);
 		$Object = $this->getStartObject($Coaching, (bool)$initial);

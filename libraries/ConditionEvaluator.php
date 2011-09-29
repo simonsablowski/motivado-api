@@ -25,7 +25,7 @@ class ConditionEvaluator extends \Application {
 	}
 	
 	protected function secureCondition(&$condition) {
-		if (preg_match('/[^\s\w()\']/i', $condition, $characters)) {
+		if (preg_match('/[^\s\w()\'\.\-]/i', $condition, $characters)) {
 			throw new \Error('Condition contains invalid characters', $characters);
 		}
 		
@@ -55,6 +55,7 @@ class ConditionEvaluator extends \Application {
 	public function evaluate($condition) {
 		try {
 			foreach ($this->getCoachingConfigurator()->getValues() as $name => $item) {
+				if (!$name) continue;
 				$variable = $this->getVariableName($name);
 				$$variable = \Motivado\Api\Json::decode($item['value']);
 			}
