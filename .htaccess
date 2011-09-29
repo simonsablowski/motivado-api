@@ -1,6 +1,6 @@
 RewriteEngine on
 
-RewriteBase /motivado/api/web
+RewriteBase /motivado-api/web
 
 RewriteRule ^$ index.php [L,QSA]
 

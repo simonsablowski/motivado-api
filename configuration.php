@@ -2,20 +2,19 @@
 
 $configuration = array();
 
-$configuration['header'] = 'text/json';
+$configuration['header'] = 'application/json';
 
 $configuration['pathApplication'] = dirname(__FILE__) . '/';
 
 $configuration['includeDirectories'] = array(
 	$configuration['pathApplication'],
-	'D:/Webprojekte/nacho/'
+	'D:/Entwicklung/nacho/'
 );
 
 $configuration['Database'] = array(
 	'type' => 'MySql',
 	'host' => 'localhost',
-	// 'name' => 'motivado_api',
-	'name' => 'motivado_importer',
+	'name' => 'motivado_api',
 	'user' => 'root',
 	'password' => ''
 );
@@ -29,7 +28,5 @@ $configuration['Localization'] = array(
 );
 
 $configuration['formatJson'] = TRUE;
-// $configuration['formatJson'] = FALSE;
 
-$configuration['debugMode'] = TRUE;
-// $configuration['debugMode'] = FALSE;
+$configuration['debugMode'] = FALSE;
