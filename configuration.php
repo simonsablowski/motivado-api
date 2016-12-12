@@ -8,7 +8,7 @@ $configuration['pathApplication'] = dirname(__FILE__) . '/';
 
 $configuration['includeDirectories'] = array(
 	$configuration['pathApplication'],
-	'D:/Entwicklung/nacho/'
+	$configuration['pathApplication'] . '../nacho/'
 );
 
 $configuration['Database'] = array(
