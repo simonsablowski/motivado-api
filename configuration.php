@@ -14,8 +14,8 @@ $configuration['includeDirectories'] = array(
 $configuration['Database'] = array(
 	'type' => 'MySql',
 	'host' => 'localhost',
-	'name' => 'motivado_api',
-	'user' => 'root',
+	'name' => 'motivado',
+	'user' => 'motivado',
 	'password' => ''
 );
 
