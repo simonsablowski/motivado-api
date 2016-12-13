@@ -1,4 +1,4 @@
 motivado-api
 ========
 
-API for Motivado's coaching content created by [Simon Sablowski](http://www.simsab.net).
+API for Motivado's coaching content. Created by [Simon Sablowski](http://www.simsab.net).
